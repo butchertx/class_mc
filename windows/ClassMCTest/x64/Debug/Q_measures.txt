@@ -1,0 +1,3 @@
+Q for ptemp at 1000 measures: 0.48321
+Q for normal at 1000 measures: 0.49398
+Q theoretical = 0.48370
