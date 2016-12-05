@@ -1,0 +1,5 @@
+8 spacial sites, 128 time sites
+J = 1.0 to 5.0
+Delta = 1.0 to 6.0
+Beta = 1.0
+g = 0

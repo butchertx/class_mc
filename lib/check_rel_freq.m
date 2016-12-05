@@ -15,8 +15,8 @@ max(zvals)
 zvals;
 figure()
 hold on
-hist(energies, 15*N, 1);
-plot(erange, .055*zvals / max(zvals));
+hist(energies, N, 1);
+%plot(erange, .055*zvals / max(zvals));
 
 hold off
 %check evolution of energies as well

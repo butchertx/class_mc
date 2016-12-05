@@ -1,3 +1,5 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "LongRangeWolff2D.h"
 
 LongRangeWolff2D::LongRangeWolff2D(IsingLattice2D* lat_in, class_mc_params* params_in, std::string model_type) {
@@ -11,12 +13,16 @@ LongRangeWolff2D::LongRangeWolff2D(IsingLattice2D* lat_in, class_mc_params* para
 	if (model_type.compare("mean_field") == 0) {
 		set_mean_field_model();
 	}
+	else if (model_type.compare("spin_boson") == 0) {
+		set_spin_boson_model();
+	}
 	else {
 		std::cout << model_type << " is not a valid lattice model\n";
 	}
 
 	//set flags
 	LONG_RANGE_CLUSTER = false;
+	NEAREST_NEIGHBOR_CLUSTER = false;
 }
 
 void LongRangeWolff2D::set_mean_field_model() {
@@ -26,7 +32,41 @@ void LongRangeWolff2D::set_mean_field_model() {
 }
 
 void LongRangeWolff2D::set_spin_boson_model() {
-
+	//model is translationally invariant, so (i,j) will represent a distance in the (spacial, imaginary time) direction
+	interactions.fill(0.0);
+	double g = params.sbparams.g, A = params.sbparams.A0, gamma = params.Js[1], J = params.Js[0], v = params.sbparams.v, a = params.spacings[0], tc = params.spacings[1], x, y;
+	int Nt = params.lengths[1];
+	for (int i = 0; i < interactions.get_dimx(); ++i) {
+		for (int j = 0; j < interactions.get_dimy(); ++j) {
+			if (i == 0) {
+				//temporal nearest neighbor interaction
+				if (j == 1) {
+					interactions.setval(i, j, -gamma - 2 * g*g*A*M_PI*M_PI / Nt / Nt / sin(M_PI / Nt) / sin(M_PI / Nt));
+				}
+				//temporal self-interaction
+				if (j > 1) {
+					interactions.setval(i, j, -2 * g*g*A*M_PI*M_PI / Nt / Nt / sin(M_PI * j / Nt) / sin(M_PI * j / Nt));
+				}
+			}
+			else if (j == 0) {
+				//spacial nearest neighbor interactions
+				if (i == 1) {
+					interactions.setval(i, j, -J + 2 * g*g*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a / Nt / v / tc) / sinh(M_PI * a / Nt / v / tc));
+				}
+				//spacial same-time long range interactions
+				if (i > 1) {
+					interactions.setval(i, j, 2 * g*g*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a * i / Nt / v / tc) / sinh(M_PI * a * i / Nt / v / tc));
+				}
+			}
+			else {
+				//different site, different time interactions
+				x = M_PI*j / Nt;
+				y = M_PI*i*a / v / Nt / tc;
+				interactions.setval(i, j, -4 * g*g*M_PI*M_PI*A / Nt / Nt*(sin(x)*sin(x)*cosh(y)*cosh(y) - cos(x)*cos(x)*sinh(y)*sinh(y)) / 
+					((sin(x)*sin(x)*cosh(y)*cosh(y) + cos(x)*cos(x)*sinh(y)*sinh(y))*(sin(x)*sin(x)*cosh(y)*cosh(y) + cos(x)*cos(x)*sinh(y)*sinh(y))));
+			}
+		}
+	}
 }
 
 void LongRangeWolff2D::step() {
@@ -88,6 +128,76 @@ double LongRangeWolff2D::calc_E_mean_field_model() {
 	return E;
 }
 
+double LongRangeWolff2D::calc_E() {
+	//essentially, the time-averaged energy of a given set of quantum fluctuations.  Calculate the action then divide by beta
+	double S = 0;
+	int s1;
+	for (int i = 0; i < lat.get_Lx(); ++i) {
+		for (int j = 0; j < lat.get_Ly(); ++j) {
+			s1 = lat.get_spin(i, j);
+			for (int m = i; m < lat.get_Lx(); ++m) {
+				for (int n = j; n < lat.get_Ly(); ++n) {
+					S += s1 * lat.get_spin(m, n) * interactions.getval(m - i, n - j);
+				}
+			}
+		}
+	}
+
+	return S / params.beta / lat.get_N();
+}
+
+std::vector<double> LongRangeWolff2D::calc_corr(int dimension) {
+	//calculate the correlation function along x (if dim = 0) or y (if dim = 1)
+	if (dimension != 0 && dimension != 1) {
+		std::cout << "Error: invalid correlation measurement attempted\n";
+		return{};
+	}
+	else {
+		int length_avg = dimension == 1 ? lat.get_Lx() : lat.get_Ly();
+		int length_corr = dimension == 1 ? lat.get_Ly() : lat.get_Lx();
+		std::vector<double> corr(length_corr, 0.0);
+		for (int i = 0; i < length_avg; ++i) {
+			for (int j = 0; j < length_corr; ++j) {
+				corr[j] += dimension == 1 ? lat.get_spin(i, 0)*lat.get_spin(i, j) : lat.get_spin(0, i)*lat.get_spin(j, i);
+			}
+		}
+		for (int i = 0; i < corr.size(); ++i) {
+			corr[i] = corr[i] / length_avg;
+		}
+		return corr;
+	}
+}
+
+double LongRangeWolff2D::calc_sx() {
+	//assume a quantum-classical mapping.  Then, <flux> = the average absolute magnetization of a given spacial site.
+	//procedure: for sites i in 1 to Lx.  Calculate average magnetization along time dimension for i.  Take the absolute value,
+	//sum over the sites, then divide by Lx.
+	double final_result = 0;
+	for (int i = 0; i < lat.get_Lx(); ++i) {
+		double site_mag = 0;
+		for (int j = 0; j < lat.get_Ly(); ++j) {
+			site_mag += lat.get_spin(i, j);
+		}
+		site_mag = abs(site_mag / lat.get_Ly());
+		final_result += (1.0 - site_mag);
+	}
+	return final_result / lat.get_Lx();
+}
+
+double LongRangeWolff2D::calc_sz() {
+	//similar to <flux>, but instead find the absolute magnetization for each point in time, then average
+	double final_result = 0;
+	for (int j = 0; j < lat.get_Ly(); ++j) {
+		double time_mag = 0;
+		for (int i = 0; i < lat.get_Lx(); ++i) {
+			time_mag += lat.get_spin(i, j);
+		}
+		time_mag = abs(time_mag / lat.get_Lx());
+		final_result += time_mag;
+	}
+	return final_result / lat.get_Ly();
+}
+
 void LongRangeWolff2D::test_spins(spin seed){
 	//choose a random number.  Then determine how far away the next added spin is
 	//test next added spin for validity
@@ -114,6 +224,44 @@ void LongRangeWolff2D::test_spins(spin seed){
 				cluster.setval(x, y, 1);
 				buffer.push_back(newspin);
 			}
+		}
+	}
+	else if (NEAREST_NEIGHBOR_CLUSTER) {
+		//Only look at nearest neighbors, and only care about two possible couplings
+		double Jx = params.Js[0], Jy = params.Js[1];
+		x = seed.x;
+		y = seed.y;
+
+		//test x neighbors
+		if (seed.proj == lat.get_spin((x + Lx - 1) % Lx, y) && cluster.getval((x + Lx - 1) % Lx, y) == 0 && drand1_() < (1 - exp(-2 * Jx))) {
+			newspin.proj = seed.proj;
+			newspin.x = (x + Lx - 1) % Lx;
+			newspin.y = y;
+			cluster.setval((x + Lx - 1) % Lx, y, 1);
+			buffer.push_back(newspin);
+		}
+		if (seed.proj == lat.get_spin((x + 1) % Lx, y) && cluster.getval((x + 1) % Lx, y) == 0 && drand1_() < (1 - exp(-2 * Jx))) {
+			newspin.proj = seed.proj;
+			newspin.x = (x + 1) % Lx;
+			newspin.y = y;
+			cluster.setval((x + 1) % Lx, y, 1);
+			buffer.push_back(newspin);
+		}
+
+		//test y neighbors
+		if (seed.proj == lat.get_spin(x, (y + Ly - 1)%Ly) && cluster.getval(x, (y + Ly - 1) % Ly) == 0 && drand1_() < (1 - exp(-2 * Jy))) {
+			newspin.proj = seed.proj;
+			newspin.x = x;
+			newspin.y = (y + Ly - 1) % Ly;
+			cluster.setval(x, (y + Ly - 1) % Ly, 1);
+			buffer.push_back(newspin);
+		}
+		if (seed.proj == lat.get_spin(x, (y + 1) % Ly) && cluster.getval(x, (y + 1) % Ly) == 0 && drand1_() < (1 - exp(-2 * Jy))) {
+			newspin.proj = seed.proj;
+			newspin.x = x;
+			newspin.y = (y + 1) % Ly;
+			cluster.setval(x, (y + 1) % Ly, 1);
+			buffer.push_back(newspin);
 		}
 	}
 	else {

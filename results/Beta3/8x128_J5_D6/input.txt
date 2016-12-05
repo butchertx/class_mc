@@ -1,0 +1,27 @@
+#Lattice Params
+2	#dimension
+square	#latticetype
+8 128	#lengths
+1.0 1.0	#spacings
+
+#Model Params
+spin_boson	#model
+5 1.0	#couplings
+3.0	#beta
+0.0	#h
+
+#Algorithm Params
+wolff_lr	#algorithm
+1	#randomseed
+
+#Simultation Params
+1000	#equilibrationtime
+1000	#stepspermeasure
+100	#measuresperdump
+10	#dumps
+
+#Spin-Boson Params
+0.0	#g
+1.0	#A0
+6	#delta
+1.0	#v

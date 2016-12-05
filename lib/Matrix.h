@@ -1,5 +1,6 @@
 #pragma once
-#include<vector>
+#include <vector>
+#include <string>
 
 class Matrix
 {
@@ -11,6 +12,8 @@ public:
 	Matrix();
 	Matrix(int, int);
 
+	int get_dimx() { return rows; }
+	int get_dimy() { return cols; }
 
 	void setval(int, int, double);
 

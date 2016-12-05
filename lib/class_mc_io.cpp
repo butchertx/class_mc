@@ -195,10 +195,57 @@ void read_input_ising(std::ifstream* file_p, class_mc_params* params) {
 		iss << line;//#max dumps
 		iss >> params->max_dumps;
 		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#blank
+		iss.str("");
 	}
 	else {
 		std::cout << "Error: input file not opened\n";
 	}
+}
+
+void read_input_spin_boson(std::ifstream* file_p, spin_boson_params* params) {
+	std::string line;
+	int dummyi;
+	double dummyd;
+	std::stringstream iss;
+
+	if (file_p->is_open()) {
+		std::getline(*file_p, line);
+		iss << line;//#Spin Boson Params
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#g
+		iss >> params->g;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#A0
+		iss >> params->A0;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#delta
+		iss >> params->delta;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#v
+		iss >> params->v;
+		iss.str("");
+	}
+	else {
+		std::cout << "Error: input file not opened\n";
+	}
+}
+
+void apply_spin_boson_params(class_mc_params* params) {
+	double tc = params->beta / ((double)params->lengths[1]);
+	params->spacings[1] = tc;
+	params->Js[0] = tc*params->Js[0];
+	params->Js[1] = -0.5 * log(tc * params->sbparams.delta);
 }
 
 template<typename T>
@@ -211,23 +258,24 @@ std::string vec2str(std::vector<T> vec) {
 	return ss.str();
 }
 
-void write_outputs(int dump_num, std::vector<int> steps, std::vector<double> times, std::vector<double> energies, std::vector<double> mags) {
-	char* dump_path = "./dump";
-	makePath(dump_path);
+void write_outputs(int dump_num, std::vector<int> steps, std::vector<double> times, std::vector<double> record1, std::vector<double> record2, std::vector<double> record3) {
+	//char* dump_path = "./dump";
+	makePath("./dump");
 	char dump_name[100];
 	sprintf(dump_name, "dump/dump%d.csv", dump_num);
 	std::ofstream file;
 	file.open(dump_name);
 	file << "Steps," << vec2str(steps) << "\n";
 	file << "Times," << vec2str(times) << "\n";
-	file << "Energies," << vec2str(energies) << "\n";
-	file << "Mags (per site)," << vec2str(mags) << "\n";
+	file << "<Sz>," << vec2str(record1) << "\n";
+	file << "<Sx>," << vec2str(record2) << "\n";
+	file << "corr_t," << vec2str(record3) << "\n";
 	file.close();
 }
 
 void write_state(int state_num, IsingLattice2D lat, double action) {
-	char* dump_path = "./dump";
-	makePath(dump_path);
+	//char* dump_path = "./dump";
+	makePath("./dump");
 	char dump_name[100];
 	sprintf(dump_name, "dump/state%d.csv", state_num);
 	std::ofstream file;

@@ -34,36 +34,48 @@ int main(int argc, char *argv[]) {
 	std::cout << "Input file: " << argv[1] << "\n\n";
 	infile.open(argv[1]);
 	read_input_ising(&infile, &params);
+	read_input_spin_boson(&infile, &(params.sbparams));
+	//std::cout << params.to_string();
+
+	apply_spin_boson_params(&params);
+
 	std::cout << params.to_string();
 
 	IsingLattice2D test_lat = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
 	LongRangeWolff2D wolff = LongRangeWolff2D(&test_lat, &params, params.model);
+	if (params.alg.compare("long_range_cluster") == 0) { wolff.set_alg_long_range_cluster(); }
+	else if (params.alg.compare("nearest_neighbor_cluster") == 0) { wolff.set_alg_short_range_cluster(); }
 	class_mc_measurements results;
-	results.names = { "steps", "times", "mags" , "energies"};
+	results.names = { "steps", "times", "sx" , "sz"};
 	results.values = { {}, {}, {} , {} };
+
+
+	results.func_names = { "corr_t" };
+	results.functions = { {} };
+	results.function_num_measures = { 0 };
+
 
 	timer.flag_end_time("mc_setup");
 
 	//2. Test Simulation
 	//lattice and wolff are set up, just need to run and record measurements
-	//include a parallel tempering step. use 4 threads for testing
 
 	//set up parallel tempering lattices - goal is to have some higher-temperature lattices (lower beta)
 	//stepping at the same time to allow for a better traversal of the state space
-	double beta1 = 1.1*params.beta, beta2 = 1.05*params.beta, beta3 = .95*params.beta, beta4 = .9*params.beta;
-	class_mc_params params1 = params, params2 = params, params3 = params, params4 = params;
-	IsingLattice2D test_lat1 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
-	IsingLattice2D test_lat2 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
-	IsingLattice2D test_lat3 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
-	IsingLattice2D test_lat4 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
-	LongRangeWolff2D wolff1 = LongRangeWolff2D(&test_lat1, &params1, params.model);
-	LongRangeWolff2D wolff2 = LongRangeWolff2D(&test_lat2, &params2, params.model);
-	LongRangeWolff2D wolff3 = LongRangeWolff2D(&test_lat3, &params3, params.model);
-	LongRangeWolff2D wolff4 = LongRangeWolff2D(&test_lat4, &params4, params.model);
-	wolff1.set_beta(beta1);
-	wolff2.set_beta(beta2);
-	wolff3.set_beta(beta3);
-	wolff4.set_beta(beta4);
+	//double beta1 = 1.1*params.beta, beta2 = 1.05*params.beta, beta3 = .95*params.beta, beta4 = .9*params.beta;
+	//class_mc_params params1 = params, params2 = params, params3 = params, params4 = params;
+	//IsingLattice2D test_lat1 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+	//IsingLattice2D test_lat2 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+	//IsingLattice2D test_lat3 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+	//IsingLattice2D test_lat4 = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+	//LongRangeWolff2D wolff1 = LongRangeWolff2D(&test_lat1, &params1, params.model);
+	//LongRangeWolff2D wolff2 = LongRangeWolff2D(&test_lat2, &params2, params.model);
+	//LongRangeWolff2D wolff3 = LongRangeWolff2D(&test_lat3, &params3, params.model);
+	//LongRangeWolff2D wolff4 = LongRangeWolff2D(&test_lat4, &params4, params.model);
+	//wolff1.set_beta(beta1);
+	//wolff2.set_beta(beta2);
+	//wolff3.set_beta(beta3);
+	//wolff4.set_beta(beta4);
 	LongRangeWolff2D* primary_wolff_p = &wolff;
 
 	//start stepping
@@ -87,23 +99,26 @@ int main(int argc, char *argv[]) {
 			}
 			results.record("steps", (double)(dump*params.measures_per_dump*params.steps_per_measure + measure*params.steps_per_measure + params.eq_time));
 			results.record("times", timer.get_running_time("mc_run"));
-			results.record("mags", primary_wolff_p->calc_mag());
-			results.record("energies", primary_wolff_p->calc_E_mean_field_model());
+			results.record("sx", primary_wolff_p->calc_sx());
+			results.record("sz", primary_wolff_p->calc_sz());
+			results.record("corr_t", primary_wolff_p->calc_corr(1));
 			//primary_wolff_p = parallel_temp(&wolff, &wolff1, &wolff2, &wolff3, &wolff4, primary_wolff_p);
+			//write_state(dump*params.measures_per_dump + measure, lat, 5.0);
 		}
 		std::vector<int> real_steps;
 		std::vector<double> bad_steps = results.get_vals("steps");
 		for (int i = 0; i < bad_steps.size(); ++i) {
 			real_steps.push_back((int)bad_steps[i]);
 		}
-		write_outputs(dump, real_steps, results.get_vals("times"), results.get_vals("energies"), results.get_vals("mags"));
+		write_outputs(dump, real_steps, results.get_vals("times"), results.get_vals("sz"), results.get_vals("sx"), results.get_func("corr_t"));
+		std::cout << "Dump " << dump + 1 << " out of " << params.max_dumps << "\n";
 	}
 	timer.flag_end_time("mc_run");
 
 	//3. Compute averages
 	//mag, mag^2, mag^4 (for binder cumulant)
 
-	std::vector<double> mags = results.get_vals("mags");
+	std::vector<double> mags = results.get_vals("sz");
 	double mag2 = 0;
 	double mag2_avg = 0;
 	double mag4_avg = 0;
@@ -116,16 +131,16 @@ int main(int argc, char *argv[]) {
 	mag4_avg = mag4_avg / mags.size();
 	double Q = mag2_avg * mag2_avg / mag4_avg;
 
-	std::vector<double> energies = results.get_vals("energies");
-	double e = 0;
-	double e2 = 0;
-	for (int i = 0; i < energies.size(); ++i) {
-		e += energies[i];
-		e2 += energies[i] * energies[i];
-	}
-	e = e / energies.size();
-	e2 = e2 / energies.size();
-	std::cout << "Spec heat: " << params.beta * params.beta / test_lat.get_N() * (e2 - e*e) << "\n";
+	//std::vector<double> energies = results.get_vals("sz");
+	//double e = 0;
+	//double e2 = 0;
+	//for (int i = 0; i < energies.size(); ++i) {
+	//	e += energies[i];
+	//	e2 += energies[i] * energies[i];
+	//}
+	//e = e / energies.size();
+	//e2 = e2 / energies.size();
+	//std::cout << "Spec heat: " << params.beta * params.beta / test_lat.get_N() * (e2 - e*e) << "\n";
 
 	//4. output results
 
@@ -135,6 +150,7 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+
 
 LongRangeWolff2D* parallel_temp(LongRangeWolff2D* set1, LongRangeWolff2D* set2, LongRangeWolff2D* set3, LongRangeWolff2D* set4, LongRangeWolff2D* set5, LongRangeWolff2D* prim_p) {
 	double swap;

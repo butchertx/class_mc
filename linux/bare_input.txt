@@ -1,0 +1,27 @@
+#Lattice Parameters
+2
+square
+8 8
+1.0 1.0
+
+#Model Parameters
+spin_boson
+1.0 1.0
+1.0
+0.0
+
+#Algorithm Parameters
+wolff_lr
+1
+
+#Simulation Parameters
+100
+10
+10
+10
+
+#Spin Boson Parameters
+0.0
+1.0
+1.0
+1.0

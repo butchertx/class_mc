@@ -1,0 +1,26 @@
+Program name: /home/mwb6/class_mc/mc_benchmark.exe
+Input file: input.txt
+
+Dimension: 2
+Lattice type: square
+Dimension lengths: 8 128 
+Dimension spacings: 1 0.078125 
+Model: spin_boson
+J couplings: 0.078125 0.413695 
+kT: 0.1
+Beta: 10
+H: 0
+Algorithm: wolff_lr
+Random Seed: 1
+Equilibration time: 1000
+Steps Per Measurement: 1000
+Measures Per Dump: 100
+Max Dumps: 10
+Spin Boson Params:
+g: 0
+A0: 1
+Delta: 6
+V: 1
+Q = 0.338441
+mc_setup: 0.00455187s
+mc_run: 106.212s
