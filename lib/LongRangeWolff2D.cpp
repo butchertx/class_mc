@@ -2,27 +2,34 @@
 #include <cmath>
 #include "LongRangeWolff2D.h"
 
-LongRangeWolff2D::LongRangeWolff2D(IsingLattice2D* lat_in, class_mc_params* params_in, std::string model_type) {
+LongRangeWolff2D::LongRangeWolff2D(IsingLattice2D* lat_in, class_mc_params* params_in) {
 	lat = *lat_in;
 	params = *params_in;
 	interactions = Matrix(lat.get_Lx(), lat.get_Ly());
 	cluster = IntMatrix(lat.get_Lx(), lat.get_Ly());
 	cluster.fill(0);
+	cluster_size = 0;
 
 	//generate interactions matrix
-	if (model_type.compare("mean_field") == 0) {
-		set_mean_field_model();
-	}
-	else if (model_type.compare("spin_boson") == 0) {
-		set_spin_boson_model();
-	}
-	else {
-		std::cout << model_type << " is not a valid lattice model\n";
-	}
+	set_model();
 
 	//set flags
 	LONG_RANGE_CLUSTER = false;
 	NEAREST_NEIGHBOR_CLUSTER = false;
+	TIMERS = false;
+	VERIFY_TESTING = false;
+}
+
+void LongRangeWolff2D::set_model() {
+	if (params.model.compare("mean_field") == 0) {
+		set_mean_field_model();
+	}
+	else if (params.model.compare("spin_boson") == 0) {
+		set_spin_boson_model();
+	}
+	else {
+		std::cout << params.model << " is not a valid lattice model\n";
+	}
 }
 
 void LongRangeWolff2D::set_mean_field_model() {
@@ -74,7 +81,7 @@ void LongRangeWolff2D::step() {
 	//2. go to all interacting spins and test to add to buffer and cluster
 	//		- use long range procedure in Int. J. Mod. Phys. C 6, 359-370 (1995).
 	//3. when buffer is empty, flip cluster
-
+	cluster_size = 0;
 	//1. get seed
 	spin seed;
 	seed.x = (int) (lat.get_Lx() * drand1_());
@@ -100,6 +107,12 @@ void LongRangeWolff2D::step() {
 			if (cluster.getval(x, y) == 1) {
 				lat.flip_spin(x, y);
 			}
+		}
+	}
+	//save the size of the cluster
+	for (int i = 0; i < cluster.get_dimx(); ++i) {
+		for (int j = 0; j < cluster.get_dimy(); ++j) {
+			cluster_size += cluster.getval(i, j);
 		}
 	}
 	//clear cluster
@@ -143,7 +156,7 @@ double LongRangeWolff2D::calc_E() {
 		}
 	}
 
-	return S / params.beta / lat.get_N();
+	return S / params.beta;
 }
 
 std::vector<double> LongRangeWolff2D::calc_corr(int dimension) {
@@ -186,14 +199,13 @@ double LongRangeWolff2D::calc_sx() {
 
 double LongRangeWolff2D::calc_sz() {
 	//similar to <flux>, but instead find the absolute magnetization for each point in time, then average
-	double final_result = 0;
+	double final_result = 0.0;
 	for (int j = 0; j < lat.get_Ly(); ++j) {
-		double time_mag = 0;
+		double time_mag = 0.0;
 		for (int i = 0; i < lat.get_Lx(); ++i) {
 			time_mag += lat.get_spin(i, j);
 		}
-		time_mag = abs(time_mag / lat.get_Lx());
-		final_result += time_mag;
+		final_result += time_mag > 0 ? time_mag / lat.get_Lx() : -time_mag / lat.get_Lx();
 	}
 	return final_result / lat.get_Ly();
 }
@@ -207,7 +219,7 @@ void LongRangeWolff2D::test_spins(spin seed){
 	double prob, rando, K = interactions.getval(0, 0);
 	spin newspin;
 	int x = 0, y = 0;
-	//current version is specific to the mean field model
+	//use look-up table and long-range wolff cluster building
 	if (LONG_RANGE_CLUSTER) {
 
 		while (i < Lx || j < Ly) {

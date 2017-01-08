@@ -1,8 +1,5 @@
 ﻿  mc_benchmark.cpp
-  LongRangeWolff2D.cpp
-c:\users\matthew\dropbox\code\class_mc\lib\longrangewolff2d.cpp(215): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  class_mc_io.cpp
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(95): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+c:\users\matthew\dropbox\code\class_mc\windows\classmctest\classmc\mc_benchmark.cpp(287): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
   ClassMC.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\ClassMCTest\x64\Debug\ClassMC.exe
   ClassMC.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\ClassMCTest\x64\Debug\ClassMC.pdb (Partial PDB)

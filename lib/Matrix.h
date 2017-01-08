@@ -33,8 +33,12 @@ public:
 	IntMatrix();
 	IntMatrix(int, int);
 
+	int get_dimx() { return rows; }
+	int get_dimy() { return cols; }
+
 	void setval(int, int, int);
 	void fill(int);
 	int getval(int, int);
+
 	std::string to_string();
 };

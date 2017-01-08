@@ -1,0 +1,600 @@
+Size: 8x8
+Beta: 0.1
+Delta: 0.1
+Eq time: 0.10489
+
+
+Size: 8x8
+Beta: 0.1
+Delta: 0.5
+Eq time: 0.103434
+
+
+Size: 8x8
+Beta: 0.1
+Delta: 1
+Eq time: 0.105438
+
+
+Size: 8x8
+Beta: 0.1
+Delta: 5
+Eq time: 0.102009
+
+
+Size: 8x8
+Beta: 0.1
+Delta: 10
+Eq time: 0.0875718
+
+
+Size: 8x8
+Beta: 0.5
+Delta: 0.1
+Eq time: 0.16945
+
+
+Size: 8x8
+Beta: 0.5
+Delta: 0.5
+Eq time: 0.161969
+
+
+Size: 8x8
+Beta: 0.5
+Delta: 1
+Eq time: 0.150197
+
+
+Size: 8x8
+Beta: 0.5
+Delta: 5
+Eq time: 0.0773459
+
+
+Size: 8x8
+Beta: 0.5
+Delta: 10
+Eq time: 0.0642919
+
+
+Size: 8x8
+Beta: 1
+Delta: 0.1
+Eq time: 0.310764
+
+
+Size: 8x8
+Beta: 1
+Delta: 0.5
+Eq time: 0.267869
+
+
+Size: 8x8
+Beta: 1
+Delta: 1
+Eq time: 0.213444
+
+
+Size: 8x8
+Beta: 1
+Delta: 5
+Eq time: 0.0648547
+
+
+Size: 8x8
+Beta: 1
+Delta: 10
+Eq time: 0.0607716
+
+
+Size: 8x8
+Beta: 5
+Delta: 0.1
+Eq time: 0.392753
+
+
+Size: 8x8
+Beta: 5
+Delta: 0.5
+Eq time: 0.376645
+
+
+Size: 8x8
+Beta: 5
+Delta: 1
+Eq time: 0.193524
+
+
+Size: 8x8
+Beta: 5
+Delta: 5
+Eq time: 0.0718392
+
+
+Size: 8x8
+Beta: 5
+Delta: 10
+Eq time: 0.0715285
+
+
+Size: 8x8
+Beta: 10
+Delta: 0.1
+Eq time: 0.391916
+
+
+Size: 8x8
+Beta: 10
+Delta: 0.5
+Eq time: 0.374616
+
+
+Size: 8x8
+Beta: 10
+Delta: 1
+Eq time: 0.0892028
+
+
+Size: 8x8
+Beta: 10
+Delta: 5
+Eq time: 0.0899668
+
+
+Size: 8x8
+Beta: 10
+Delta: 10
+Eq time: 0.090301
+
+
+Size: 16x16
+Beta: 0.1
+Delta: 0.1
+Eq time: 0.31619
+
+
+Size: 16x16
+Beta: 0.1
+Delta: 0.5
+Eq time: 0.312695
+
+
+Size: 16x16
+Beta: 0.1
+Delta: 1
+Eq time: 0.313263
+
+
+Size: 16x16
+Beta: 0.1
+Delta: 5
+Eq time: 0.306221
+
+
+Size: 16x16
+Beta: 0.1
+Delta: 10
+Eq time: 0.286882
+
+
+Size: 16x16
+Beta: 0.5
+Delta: 0.1
+Eq time: 0.434532
+
+
+Size: 16x16
+Beta: 0.5
+Delta: 0.5
+Eq time: 0.439086
+
+
+Size: 16x16
+Beta: 0.5
+Delta: 1
+Eq time: 0.40758
+
+
+Size: 16x16
+Beta: 0.5
+Delta: 5
+Eq time: 0.259135
+
+
+Size: 16x16
+Beta: 0.5
+Delta: 10
+Eq time: 0.237236
+
+
+Size: 16x16
+Beta: 1
+Delta: 0.1
+Eq time: 0.784905
+
+
+Size: 16x16
+Beta: 1
+Delta: 0.5
+Eq time: 0.72829
+
+
+Size: 16x16
+Beta: 1
+Delta: 1
+Eq time: 0.534473
+
+
+Size: 16x16
+Beta: 1
+Delta: 5
+Eq time: 0.241439
+
+
+Size: 16x16
+Beta: 1
+Delta: 10
+Eq time: 0.227945
+
+
+Size: 16x16
+Beta: 5
+Delta: 0.1
+Eq time: 1.55086
+
+
+Size: 16x16
+Beta: 5
+Delta: 0.5
+Eq time: 1.47726
+
+
+Size: 16x16
+Beta: 5
+Delta: 1
+Eq time: 0.856592
+
+
+Size: 16x16
+Beta: 5
+Delta: 5
+Eq time: 0.227435
+
+
+Size: 16x16
+Beta: 5
+Delta: 10
+Eq time: 0.230369
+
+
+Size: 16x16
+Beta: 10
+Delta: 0.1
+Eq time: 1.56582
+
+
+Size: 16x16
+Beta: 10
+Delta: 0.5
+Eq time: 1.5291
+
+
+Size: 16x16
+Beta: 10
+Delta: 1
+Eq time: 0.489922
+
+
+Size: 16x16
+Beta: 10
+Delta: 5
+Eq time: 0.239008
+
+
+Size: 16x16
+Beta: 10
+Delta: 10
+Eq time: 0.23672
+
+
+Size: 32x32
+Beta: 0.1
+Delta: 0.1
+Eq time: 1.04385
+
+
+Size: 32x32
+Beta: 0.1
+Delta: 0.5
+Eq time: 1.05478
+
+
+Size: 32x32
+Beta: 0.1
+Delta: 1
+Eq time: 1.03883
+
+
+Size: 32x32
+Beta: 0.1
+Delta: 5
+Eq time: 1.06139
+
+
+Size: 32x32
+Beta: 0.1
+Delta: 10
+Eq time: 1.06193
+
+
+Size: 32x32
+Beta: 0.5
+Delta: 0.1
+Eq time: 1.30467
+
+
+Size: 32x32
+Beta: 0.5
+Delta: 0.5
+Eq time: 1.25735
+
+
+Size: 32x32
+Beta: 0.5
+Delta: 1
+Eq time: 1.23517
+
+
+Size: 32x32
+Beta: 0.5
+Delta: 5
+Eq time: 0.976518
+
+
+Size: 32x32
+Beta: 0.5
+Delta: 10
+Eq time: 0.927698
+
+
+Size: 32x32
+Beta: 1
+Delta: 0.1
+Eq time: 2.01705
+
+
+Size: 32x32
+Beta: 1
+Delta: 0.5
+Eq time: 1.8026
+
+
+Size: 32x32
+Beta: 1
+Delta: 1
+Eq time: 1.41226
+
+
+Size: 32x32
+Beta: 1
+Delta: 5
+Eq time: 0.914542
+
+
+Size: 32x32
+Beta: 1
+Delta: 10
+Eq time: 0.902532
+
+
+Size: 32x32
+Beta: 5
+Delta: 0.1
+Eq time: 6.21177
+
+
+Size: 32x32
+Beta: 5
+Delta: 0.5
+Eq time: 5.72569
+
+
+Size: 32x32
+Beta: 5
+Delta: 1
+Eq time: 2.66647
+
+
+Size: 32x32
+Beta: 5
+Delta: 5
+Eq time: 0.88368
+
+
+Size: 32x32
+Beta: 5
+Delta: 10
+Eq time: 0.898633
+
+
+Size: 32x32
+Beta: 10
+Delta: 0.1
+Eq time: 6.55537
+
+
+Size: 32x32
+Beta: 10
+Delta: 0.5
+Eq time: 5.88966
+
+
+Size: 32x32
+Beta: 10
+Delta: 1
+Eq time: 2.71509
+
+
+Size: 32x32
+Beta: 10
+Delta: 5
+Eq time: 0.905243
+
+
+Size: 32x32
+Beta: 10
+Delta: 10
+Eq time: 0.910017
+
+
+Size: 128x128
+Beta: 0.1
+Delta: 0.1
+Eq time: 14.3291
+
+
+Size: 128x128
+Beta: 0.1
+Delta: 0.5
+Eq time: 14.2724
+
+
+Size: 128x128
+Beta: 0.1
+Delta: 1
+Eq time: 14.2502
+
+
+Size: 128x128
+Beta: 0.1
+Delta: 5
+Eq time: 14.2284
+
+
+Size: 128x128
+Beta: 0.1
+Delta: 10
+Eq time: 14.273
+
+
+Size: 128x128
+Beta: 0.5
+Delta: 0.1
+Eq time: 14.1804
+
+
+Size: 128x128
+Beta: 0.5
+Delta: 0.5
+Eq time: 14.2676
+
+
+Size: 128x128
+Beta: 0.5
+Delta: 1
+Eq time: 14.2883
+
+
+Size: 128x128
+Beta: 0.5
+Delta: 5
+Eq time: 14.1869
+
+
+Size: 128x128
+Beta: 0.5
+Delta: 10
+Eq time: 14.2637
+
+
+Size: 128x128
+Beta: 1
+Delta: 0.1
+Eq time: 14.1827
+
+
+Size: 128x128
+Beta: 1
+Delta: 0.5
+Eq time: 14.2014
+
+
+Size: 128x128
+Beta: 1
+Delta: 1
+Eq time: 14.1431
+
+
+Size: 128x128
+Beta: 1
+Delta: 5
+Eq time: 14.1723
+
+
+Size: 128x128
+Beta: 1
+Delta: 10
+Eq time: 14.2286
+
+
+Size: 128x128
+Beta: 5
+Delta: 0.1
+Eq time: 14.2279
+
+
+Size: 128x128
+Beta: 5
+Delta: 0.5
+Eq time: 14.2424
+
+
+Size: 128x128
+Beta: 5
+Delta: 1
+Eq time: 14.2809
+
+
+Size: 128x128
+Beta: 5
+Delta: 5
+Eq time: 14.2299
+
+
+Size: 128x128
+Beta: 5
+Delta: 10
+Eq time: 14.1735
+
+
+Size: 128x128
+Beta: 10
+Delta: 0.1
+Eq time: 43.9929
+
+
+Size: 128x128
+Beta: 10
+Delta: 0.5
+Eq time: 20.0321
+
+
+Size: 128x128
+Beta: 10
+Delta: 1
+Eq time: 14.2764
+
+
+Size: 128x128
+Beta: 10
+Delta: 5
+Eq time: 14.4234
+
+
+Size: 128x128
+Beta: 10
+Delta: 10
+Eq time: 14.4333
+
+

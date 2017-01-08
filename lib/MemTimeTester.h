@@ -6,6 +6,12 @@
 #include <string>
 #include <sstream>
 
+struct timer_list {
+	int size;
+	std::vector<std::string> names;
+	std::vector<double> times;
+};
+
 class MemTimeTester {
 
 	std::vector<std::chrono::time_point<std::chrono::system_clock>> start_times;
@@ -76,6 +82,24 @@ public:
 			outstring << names[i] << ": " << elapsed.count() << "s\n";
 		}
 		std::cout << outstring.str();
+	}
+
+	timer_list get_timers() {
+		timer_list result;
+		std::chrono::duration<double> elapsed;
+		for (int i = 0; i < names.size(); ++i) {
+			elapsed = end_times[i] - start_times[i];
+			result.names.push_back(names[i]);
+			result.times.push_back(elapsed.count());
+		}
+		result.size = result.names.size();
+		return result;
+	}
+
+	void clear_timers() {
+		names = {};
+		start_times = {};
+		end_times = {};
 	}
 
 };
