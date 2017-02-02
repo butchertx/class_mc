@@ -1,0 +1,64 @@
+J: 0.3
+Gamma: 0.3
+A0: 0.001
+a / beta / v: 0.01
+average cluster size (fraction of lattice): 0.0212329
+Eq time: 0.0136022
+
+
+J: 0.3
+Gamma: 0.3
+A0: 0.001
+a / beta / v: 0.5
+average cluster size (fraction of lattice): 0.0212329
+Eq time: 0.0134693
+
+
+J: 0.3
+Gamma: 0.3
+A0: 0.2
+a / beta / v: 0.01
+average cluster size (fraction of lattice): 1
+Eq time: 0.495668
+
+
+J: 0.3
+Gamma: 0.3
+A0: 0.2
+a / beta / v: 0.5
+average cluster size (fraction of lattice): 0.788219
+Eq time: 0.364683
+
+
+J: 0.6
+Gamma: 0.6
+A0: 0.001
+a / beta / v: 0.01
+average cluster size (fraction of lattice): 0.0876712
+Eq time: 0.0441569
+
+
+J: 0.6
+Gamma: 0.6
+A0: 0.001
+a / beta / v: 0.5
+average cluster size (fraction of lattice): 0.0773973
+Eq time: 0.0399153
+
+
+J: 0.6
+Gamma: 0.6
+A0: 0.2
+a / beta / v: 0.01
+average cluster size (fraction of lattice): 1
+Eq time: 0.497918
+
+
+J: 0.6
+Gamma: 0.6
+A0: 0.2
+a / beta / v: 0.5
+average cluster size (fraction of lattice): 0.944247
+Eq time: 0.436763
+
+

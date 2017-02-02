@@ -1,0 +1,4 @@
+﻿  spin_boson_class_mc.cpp
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(95): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  spin_boson_class_mc.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\2SiteSpinBoson\spin_boson_class_mc\x64\Debug\spin_boson_class_mc.exe
+  spin_boson_class_mc.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\2SiteSpinBoson\spin_boson_class_mc\x64\Debug\spin_boson_class_mc.pdb (Partial PDB)

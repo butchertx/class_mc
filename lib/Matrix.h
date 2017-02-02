@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <iostream>
 
 class Matrix
 {
@@ -20,6 +21,7 @@ public:
 	void fill(double);
 
 	double getval(int, int);
+	double getval(int);
 
 	std::string to_string();
 };

@@ -4,12 +4,15 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <cmath>
 #include "IsingLattice2D.h"
 
 //classical monte carlo params for a number of different models and algorithms
 //Models: n-vector models (ising, heisenberg), spinboson
 //Lattices: chain, square, triangular, kagome
 //Algorithms: wolff, generalizedwolff
+
+const double PI = 3.1415897535;
 
 struct spin_boson_params {
 	double g, A0, delta, v;
@@ -59,6 +62,7 @@ struct class_mc_params {
 			ss << "A0: " << sbparams.A0 << "\n";
 			ss << "Delta: " << sbparams.delta << "\n";
 			ss << "V: " << sbparams.v << "\n";
+			ss << "Spatial Antiferro Coupling: " << 2.0 * sbparams.A0 * PI * PI / lengths[1] / lengths[1] / sinh(PI * spacings[0] / beta / sbparams.v) / sinh(PI * spacings[0] / beta / sbparams.v) << "\n";
 		}
 
 		return ss.str();
@@ -67,20 +71,20 @@ struct class_mc_params {
 	void set_q_ising_dummy(int length_in, double beta_in, double delta_in) {
 		dim = 2;
 		rand_seed = length_in;
-		eq_time = 10;
+		eq_time = 1;
 		steps_per_measure = 0;
 		measures_per_dump = 0;
 		max_dumps = 0;
 		beta = beta_in;
-		h = 0;
+		h = 0.01;
 		kT = 1 / beta;
 		lengths = { length_in, length_in };
 		spacings = { 1.0, 1.0 };
-		Js = { 1.0, 1.0 };
+		Js = { 0.0, 1.0 };
 		model = "spin_boson";
 		lattice = "square";
 		alg = "long_range_cluster";
-		sbparams.A0 = 1.0;
+		sbparams.A0 = 0.1;
 		sbparams.delta = delta_in;
 		sbparams.g = 1.0;
 		sbparams.v = 1.0;
@@ -107,7 +111,7 @@ struct class_mc_measurements {
 			}
 		}
 		if (name_ind == -1) {
-			std::cout << identifier << " is not a valid observable\n";
+			std::cout << identifier << " is not a valid observable value\n";
 			return{};
 		}
 		else {
@@ -123,7 +127,7 @@ struct class_mc_measurements {
 			}
 		}
 		if (name_ind == -1) {
-			std::cout << identifier << " is not a valid observable\n";
+			std::cout << identifier << " is not a valid function observable\n";
 			return{};
 		}
 		else {
@@ -197,10 +201,20 @@ void read_input_spin_boson(std::ifstream*, spin_boson_params*);
 
 void apply_spin_boson_params(class_mc_params*);
 
-void write_outputs(int, std::vector<int>, std::vector<double>, std::vector<double>, std::vector<double>, std::vector<double>);
+void write_outputs(int, std::vector<int>, std::vector<double>, std::vector<double>, std::vector<double>);
+
+void write_outputs_var(int, class_mc_measurements);
+
+void write_final_outputs(class_mc_measurements results, int bins);
+
+void write_params(class_mc_params params);
 
 void write_state(int, IsingLattice2D, double);
 
 bool isDirExist(const std::string& path);
 
 bool makePath(const std::string& path);
+
+double mean(std::vector<double> vals);
+
+double error(std::vector<double> vals, double mean, int bins);

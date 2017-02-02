@@ -1,0 +1,8 @@
+#Lattice Parameters
+lengths,10,10
+spacings,0.1,0.1
+Js,0.1,2.30259
+beta,1
+A0,0.01
+Delta,0.1
+v,1

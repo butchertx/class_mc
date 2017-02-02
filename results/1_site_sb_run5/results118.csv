@@ -1,0 +1,10 @@
+name, average, error
+steps,273266,35717.6
+times,209.705,27.4537
+sx,0,0
+sz,1,0
+mag,0,0
+mag2,1,0
+mag4,1,0
+ising_order,0.0031,0.0031
+corr_x,1

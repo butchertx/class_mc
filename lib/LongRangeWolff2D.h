@@ -9,18 +9,32 @@ extern "C" {
 
 
 class LongRangeWolff2D {
-	IsingLattice2D lat;
-	class_mc_params params;
-	Matrix interactions;
-	IntMatrix cluster;//0 at indices that are not in cluster, 1 at indices that are
-	int cluster_size;
-	void set_mean_field_model();
-	void set_spin_boson_model();
-	void set_model();
+	IsingLattice2D lat;//underlying lattice
+	class_mc_params params;//problem parameters
+	Matrix interactions;//interaction matrix
+	std::vector<double> cumulative_probs;//cumulative bond probabilities
+
+
 	std::vector<spin> buffer;//holds the indices of spins to check
+	IntMatrix cluster;//0 at indices that are not in cluster, 1 at indices that are
+	std::vector<spin> not_cluster;//vector of spins that have not been added to the cluster
+	std::vector<std::vector<int>> cluster_alt;//alternative cluster that may or may not be faster
+	int cluster_size;//size of the cluster during a given MC step
+	int cluster_mag;//total magnetization of the cluster
+	
+	
+	void set_model();//set the model based on the model parameter in "params"
+	void set_mean_field_model();//create interaction matrix for the mean field model
+	void set_spin_boson_model();//create interaction matrix for the spin boson model
+	void set_cumulative_probs(int, int);//set cumulative probability vector for long range cluster forming
+	void fill_not_cluster();
+
+	
+	
 	bool LONG_RANGE_CLUSTER;//if true, use long range cluster forming
 	bool NEAREST_NEIGHBOR_CLUSTER;//if true, use short range cluster forming
 	bool TIMERS;//if true, timers will be used throughout
+	MemTimeTester timers;
 	bool VERIFY_TESTING;//use to print steps to check if algorithm is working properly
 
 public:
@@ -40,8 +54,6 @@ public:
 
 	std::vector<double> calc_corr(int dimension);
 
-	double calc_fluctuations();
-
 	double calc_sx();
 
 	double calc_sz();
@@ -60,10 +72,17 @@ public:
 		lat.print_lattice();
 	}
 
+	void print_interactions() {
+		std::cout << interactions.to_string() << "\n";
+	}
+
+	void output_state();
+
 	void test_spins(spin);
 
-	void set_alg_long_range_cluster() { LONG_RANGE_CLUSTER = true; }
-	void set_alg_short_range_cluster() { NEAREST_NEIGHBOR_CLUSTER = true; }
+	void set_alg_long_range_cluster() { LONG_RANGE_CLUSTER = true; NEAREST_NEIGHBOR_CLUSTER = false; }
+	void set_alg_short_range_cluster() { NEAREST_NEIGHBOR_CLUSTER = true; LONG_RANGE_CLUSTER = false; }
+	void set_alg_naive_cluster() { LONG_RANGE_CLUSTER = false; NEAREST_NEIGHBOR_CLUSTER = false; }
 	void set_timers() { TIMERS = true;}
 	void set_testing() { VERIFY_TESTING = true; }
 

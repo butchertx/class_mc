@@ -30,6 +30,18 @@ double Matrix::getval(int row, int col) {
 	return vals[row][col];
 }
 
+double Matrix::getval(int n) {
+	//if 0 <= n < dimx * dimy, return val at (i, j) counting across rows
+	//n = i*cols + j: n/cols = i + j/cols
+	if (n < 0 || n >= rows*cols) {
+		std::cout << "Invalid choice of n in Matrix recall\n";
+		return 0.0;
+	}
+	else {
+		return vals[n / cols][n % cols];
+	}
+}
+
 std::string Matrix::to_string() {
 	std::stringstream outstring;
 	for (int i = 0; i < vals.size(); ++i) {

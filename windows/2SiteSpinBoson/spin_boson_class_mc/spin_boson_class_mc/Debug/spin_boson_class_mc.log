@@ -1,0 +1,15 @@
+﻿  spin_boson_class_mc.cpp
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(29): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(46): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(61): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(80): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(90): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(104): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(120): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(131): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(140): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(153): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(157): warning C4018: '<': signed/unsigned mismatch
+c:\users\matthew\dropbox\code\class_mc\lib\class_mc_io.h(180): warning C4018: '<': signed/unsigned mismatch
+  spin_boson_class_mc.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\2SiteSpinBoson\spin_boson_class_mc\Debug\spin_boson_class_mc.exe
+  spin_boson_class_mc.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\2SiteSpinBoson\spin_boson_class_mc\Debug\spin_boson_class_mc.pdb (Partial PDB)

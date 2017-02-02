@@ -246,6 +246,7 @@ void apply_spin_boson_params(class_mc_params* params) {
 	params->spacings[1] = tc;
 	params->Js[0] = tc*params->Js[0];
 	params->Js[1] = -0.5 * log(tc * params->sbparams.delta);
+	params->h = tc*params->h;
 }
 
 template<typename T>
@@ -258,7 +259,7 @@ std::string vec2str(std::vector<T> vec) {
 	return ss.str();
 }
 
-void write_outputs(int dump_num, std::vector<int> steps, std::vector<double> times, std::vector<double> record1, std::vector<double> record2, std::vector<double> record3) {
+void write_outputs(int dump_num, std::vector<int> steps, std::vector<double> times, std::vector<double> record1, std::vector<double> record2) {
 	//char* dump_path = "./dump";
 	makePath("./dump");
 	char dump_name[100];
@@ -269,7 +270,55 @@ void write_outputs(int dump_num, std::vector<int> steps, std::vector<double> tim
 	file << "Times," << vec2str(times) << "\n";
 	file << "<Sz>," << vec2str(record1) << "\n";
 	file << "<Sx>," << vec2str(record2) << "\n";
-	file << "corr_t," << vec2str(record3) << "\n";
+	//file << "corr_t," << vec2str(record3) << "\n";
+	file.close();
+}
+
+void write_outputs_var(int dump_num, class_mc_measurements results) {
+	//go through "names", then "func_names" and record all results
+	makePath("./dump");
+	char dump_name[100];
+	sprintf(dump_name, "dump/dump%d.csv", dump_num);
+	std::ofstream file;
+	file.open(dump_name);
+	for (std::string name : results.names) {
+		file << name << "," << vec2str(results.get_vals(name)) << "\n";
+	}
+	for (std::string name : results.func_names){
+		file << name << "," << vec2str(results.get_func(name)) << "\n";
+	}
+	file.close();
+
+}
+
+//write outputs with averages and errors
+void write_final_outputs(class_mc_measurements results, int err_bins) {
+	//go through "names", then "func_names" and record all results
+	std::ofstream file;
+	file.open("results.csv");
+	file << "name, average, error\n";
+	double mean_temp = 0.0;
+	for (std::string name : results.names) {
+		mean_temp = mean(results.get_vals(name));
+		file << name << "," << mean_temp << "," << error(results.get_vals(name), mean_temp, err_bins) << "\n";
+	}
+	for (std::string name : results.func_names) {
+		file << name << "," << vec2str(results.get_func(name)) << "\n";
+	}
+	file.close();
+}
+
+void write_params(class_mc_params params) {
+	std::ofstream file;
+	file.open("params.csv");
+	file << "#Lattice Parameters\n";
+	file << "lengths," << params.lengths[0] << "," << params.lengths[1] << "\n";
+	file << "spacings," << params.spacings[0] << "," << params.spacings[1] << "\n";
+	file << "Js," << params.Js[0] << "," << params.Js[1] << "\n";
+	file << "beta," << params.beta << "\n";
+	file << "A0," << params.sbparams.A0 << "\n";
+	file << "Delta," << params.sbparams.delta << "\n";
+	file << "v," << params.sbparams.v << "\n";
 	file.close();
 }
 
@@ -284,4 +333,34 @@ void write_state(int state_num, IsingLattice2D lat, double action) {
 	file << lat.to_string();
 	file.close();
 
+}
+
+//find the mean of a given list of values
+double mean(std::vector<double> vals) {
+	double sum = 0.0;
+	for (int i = 0; i < vals.size(); ++i) {
+		sum += vals[i];
+	}
+	return sum / vals.size();
+}
+
+//find the error via the bin technique using a specified number of bins
+double error(std::vector<double> vals, double mean, int bins) {
+	int NMC = bins;//Nb is bin size, NMC is number of bins
+	int Nb = vals.size() / NMC;
+	std::vector<double> avgs(NMC);
+	for (int i = 0; i < NMC; ++i) {
+		double avg = 0;
+		for (int j = 0; j < Nb; ++j) {
+			avg += vals[Nb*i + j];
+		}
+		avg = avg / Nb;
+		avgs[i] = avg;
+	}
+	double std_dev = 0;
+	for (int i = 0; i < avgs.size(); ++i) {
+		std_dev += (avgs[i] - mean)*(avgs[i] - mean);
+	}
+	std_dev = sqrt(std_dev / NMC / (NMC - 1));
+	return std_dev;
 }
