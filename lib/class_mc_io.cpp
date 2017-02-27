@@ -303,6 +303,7 @@ void write_final_outputs(class_mc_measurements results, int err_bins) {
 		file << name << "," << mean_temp << "," << error(results.get_vals(name), mean_temp, err_bins) << "\n";
 	}
 	for (std::string name : results.func_names) {
+		std::cout << "writing " << name << "\n";
 		file << name << "," << vec2str(results.get_func(name)) << "\n";
 	}
 	file.close();
@@ -322,14 +323,16 @@ void write_params(class_mc_params params) {
 	file.close();
 }
 
-void write_state(int state_num, IsingLattice2D lat, double action) {
+void write_state(int state_num, IsingLattice2D& lat) {
 	//char* dump_path = "./dump";
+	//first line is Lx, Ly
+	//following lines are 1's and 0's for up and down, with spaces in between
 	makePath("./dump");
 	char dump_name[100];
 	sprintf(dump_name, "dump/state%d.csv", state_num);
 	std::ofstream file;
 	file.open(dump_name);
-	file << "Action," << action << "\n";
+	file << lat.get_Lx() << " " << lat.get_Ly() << "\n";
 	file << lat.to_string();
 	file.close();
 
@@ -346,21 +349,26 @@ double mean(std::vector<double> vals) {
 
 //find the error via the bin technique using a specified number of bins
 double error(std::vector<double> vals, double mean, int bins) {
-	int NMC = bins;//Nb is bin size, NMC is number of bins
-	int Nb = vals.size() / NMC;
-	std::vector<double> avgs(NMC);
-	for (int i = 0; i < NMC; ++i) {
-		double avg = 0;
-		for (int j = 0; j < Nb; ++j) {
-			avg += vals[Nb*i + j];
+	if (bins < 2) {
+		return 0.0;
+	}
+	else {
+		int NMC = bins;//Nb is bin size, NMC is number of bins
+		int Nb = vals.size() / NMC;
+		std::vector<double> avgs(NMC);
+		for (int i = 0; i < NMC; ++i) {
+			double avg = 0;
+			for (int j = 0; j < Nb; ++j) {
+				avg += vals[Nb*i + j];
+			}
+			avg = avg / Nb;
+			avgs[i] = avg;
 		}
-		avg = avg / Nb;
-		avgs[i] = avg;
+		double std_dev = 0;
+		for (int i = 0; i < avgs.size(); ++i) {
+			std_dev += (avgs[i] - mean)*(avgs[i] - mean);
+		}
+		std_dev = sqrt(std_dev / NMC / (NMC - 1));
+		return std_dev;
 	}
-	double std_dev = 0;
-	for (int i = 0; i < avgs.size(); ++i) {
-		std_dev += (avgs[i] - mean)*(avgs[i] - mean);
-	}
-	std_dev = sqrt(std_dev / NMC / (NMC - 1));
-	return std_dev;
 }

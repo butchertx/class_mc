@@ -16,6 +16,8 @@ LongRangeWolff2D::LongRangeWolff2D(IsingLattice2D* lat_in, class_mc_params* para
 	cluster_size = 0;
 	set_model();
 	set_cumulative_probs(lat.get_Lx(), lat.get_Ly());
+	mag = calc_sz()*lat.get_N();
+	E = calc_E();
 
 	//set flags
 	LONG_RANGE_CLUSTER = false;
@@ -77,28 +79,28 @@ void LongRangeWolff2D::set_spin_boson_model() {
 			if (i == 0) {
 				//temporal nearest neighbor interaction
 				if (j == 1 || j == interactions.get_dimy() - 1) {
-					interactions.setval(i, j, -gamma - 2 * g*g*A*M_PI*M_PI / Nt / Nt / sin(M_PI / Nt) / sin(M_PI / Nt));
+					interactions.setval(i, j, -gamma - 0.5*A*M_PI*M_PI / Nt / Nt / sin(M_PI / Nt) / sin(M_PI / Nt));
 				}
 				//temporal self-interaction
 				if (j > 1 && j < interactions.get_dimy() - 1) {
-					interactions.setval(i, j, -2 * g*g*A*M_PI*M_PI / Nt / Nt / sin(M_PI * j / Nt) / sin(M_PI * j / Nt));
+					interactions.setval(i, j, -0.5*A*M_PI*M_PI / Nt / Nt / sin(M_PI * j / Nt) / sin(M_PI * j / Nt));
 				}
 			}
 			else if (j == 0) {
 				//spacial nearest neighbor interactions
 				if (i == 1) {
-					interactions.setval(i, j, -J + 2 * g*g*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a / Nt / v / tc) / sinh(M_PI * a / Nt / v / tc));
+					interactions.setval(i, j, -J + 0.5*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a / Nt / v / tc) / sinh(M_PI * a / Nt / v / tc));
 				}
 				//spacial same-time long range interactions
 				if (i > 1) {
-					interactions.setval(i, j, 2 * g*g*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a * i / Nt / v / tc) / sinh(M_PI * a * i / Nt / v / tc));
+					interactions.setval(i, j, 0.5*A*M_PI*M_PI / Nt / Nt / sinh(M_PI * a * i / Nt / v / tc) / sinh(M_PI * a * i / Nt / v / tc));
 				}
 			}
 			else {
 				//different site, different time interactions
 				x = M_PI*j / Nt;
 				y = M_PI*i*a / v / Nt / tc;
-				interactions.setval(i, j, -4 * g*g*M_PI*M_PI*A / Nt / Nt*(sin(x)*sin(x)*cosh(y)*cosh(y) - cos(x)*cos(x)*sinh(y)*sinh(y)) /
+				interactions.setval(i, j, -M_PI*M_PI*0.5*A / Nt / Nt*(sin(x)*sin(x)*cosh(y)*cosh(y) - cos(x)*cos(x)*sinh(y)*sinh(y)) /
 					((sin(x)*sin(x)*cosh(y)*cosh(y) + cos(x)*cos(x)*sinh(y)*sinh(y))*(sin(x)*sin(x)*cosh(y)*cosh(y) + cos(x)*cos(x)*sinh(y)*sinh(y))));
 			}
 		}
@@ -134,9 +136,9 @@ void LongRangeWolff2D::fill_not_cluster() {
 }
 
 void LongRangeWolff2D::step() {
-	if (VERIFY_TESTING) { 
+	if (VERIFY_TESTING) {
 		std::cout << "\n\n*********************STARTING STEP*************************\n\n";
-		output_state(); 
+		output_state();
 	}
 
 	//1. determine a "seed" spin
@@ -145,6 +147,7 @@ void LongRangeWolff2D::step() {
 	//3. when buffer is empty, flip cluster
 	cluster_size = 0;
 	cluster_mag = 0;
+	dS = 0;
 	//1. get seed
 	spin seed;
     seed.x = (int) (lat.get_Lx() * drand1_());
@@ -153,13 +156,15 @@ void LongRangeWolff2D::step() {
     cluster.setval(seed.x, seed.y, 1);
 	++cluster_size;
 	cluster_mag += seed.proj;
-    fill_not_cluster();
+	if (!LONG_RANGE_CLUSTER && !NEAREST_NEIGHBOR_CLUSTER) {
+		fill_not_cluster();
+	}
 
 
 	if (VERIFY_TESTING) {
 		std::cout << "\n\n*********************SEED SPIN CHOSEN*************************\n\n";
 		std::cout << "seed spin: (" << seed.x << "," << seed.y << ") " << seed.proj << "\n";
-		output_state(); 
+		output_state();
 	}
 
 
@@ -167,14 +172,16 @@ void LongRangeWolff2D::step() {
 	test_spins(seed);
 	while (buffer.size() != 0) {
 		seed = buffer.back();
+		cluster_mag += seed.proj;
+		++cluster_size;
 		buffer.pop_back();
 		test_spins(seed);
 	}
 
 
-	if (VERIFY_TESTING) { 
+	if (VERIFY_TESTING) {
 		std::cout << "\n\n*********************CLUSTER CHOSEN*************************\n\n";
-		output_state(); 
+		output_state();
 	}
 
 	//3. flip cluster according to a probability check based on the magnetization change
@@ -185,6 +192,7 @@ void LongRangeWolff2D::step() {
 			for (int y = 0; y < lat.get_Ly(); ++y) {
 				if (cluster.getval(x, y) == 1) {
 					lat.flip_spin(x, y);
+					cluster.setval(x, y, 0);
 				}
 			}
 		}
@@ -198,20 +206,18 @@ void LongRangeWolff2D::step() {
 		}
 	}
 
-	//clear cluster
-	cluster.fill(0);
-
+	mag -= 2*cluster_mag;
 
 }
 
 double LongRangeWolff2D::calc_mag() {
-	double mag = 0;
+	int m = 0;
 	for (int i = 0; i < lat.get_Lx(); ++i) {
 		for (int j = 0; j < lat.get_Ly(); ++j) {
-			mag += lat.get_spin(i, j);
+			m += lat.get_spin(i, j);
 		}
 	}
-	return mag / lat.get_N();
+	return m < 0 ? -((double)m) / lat.get_N() : ((double)m) / lat.get_N();
 }
 
 double LongRangeWolff2D::calc_E_mean_field_model() {
@@ -266,18 +272,34 @@ std::vector<double> LongRangeWolff2D::calc_corr(int dimension) {
 	}
 }
 
+std::vector<double> LongRangeWolff2D::calc_corr_slow() {
+	//calculate the correlation function in both dimensions
+	std::vector<double> corr(lat.get_N(), 0.0);
+	for (int i = 0; i < lat.get_Lx(); ++i) {
+		for (int j = 0; j < lat.get_Ly(); ++j) {
+			for (int r = 0; r < lat.get_Lx(); ++r) {
+				for (int s = 0; s < lat.get_Ly(); ++s) {
+					corr[i*lat.get_Ly() + j] += lat.get_spin(r, s)*lat.get_spin((r + i) % lat.get_Lx(), (s + j) % lat.get_Ly());
+				}
+			}
+		}
+	}
+	for (int i = 0; i < corr.size(); ++i) {
+		corr[i] = corr[i] / lat.get_N();
+	}
+	return corr;
+}
+
 double LongRangeWolff2D::calc_sx() {
-	//assume a quantum-classical mapping.  Then, <flux> = the average absolute magnetization of a given spacial site.
-	//procedure: for sites i in 1 to Lx.  Calculate average magnetization along time dimension for i.  Take the absolute value,
-	//sum over the sites, then divide by Lx.
+	//assume a quantum-classical mapping.  Then, <flux>_i = 1/beta * sum_t{1/2(1 - <s(t + dt)s(t)>)}
 	double final_result = 0;
 	for (int i = 0; i < lat.get_Lx(); ++i) {
 		double site_mag = 0;
-		for (int j = 0; j < lat.get_Ly(); ++j) {
-			site_mag += lat.get_spin(i, j);
+		for (int j = 0; j < lat.get_Ly() - 1; ++j) {
+			site_mag += 0.5*(1 - lat.get_spin(i, j)*lat.get_spin(i, j + 1));
 		}
-		site_mag = site_mag > 0 ? site_mag / lat.get_Ly() : -site_mag / lat.get_Ly();
-		final_result += (1.0 - site_mag);
+		site_mag += 0.5*(1 - lat.get_spin(i, 0)*lat.get_spin(i, lat.get_Ly() - 1));
+		final_result += site_mag / lat.get_Ly();
 	}
 	return final_result / lat.get_Lx();
 }
@@ -292,7 +314,7 @@ double LongRangeWolff2D::calc_sz() {
 		}
 		final_result += time_mag / lat.get_Lx();
 	}
-	return (final_result > 0 ? final_result / lat.get_Ly() : -final_result / lat.get_Ly());
+	return final_result / lat.get_Ly();
 }
 
 void LongRangeWolff2D::test_spins(spin seed){
@@ -300,39 +322,91 @@ void LongRangeWolff2D::test_spins(spin seed){
 	//test next added spin for validity
 	//continue to next candidate
 
-	int N = lat.get_N(), Lx = lat.get_Lx(), Ly = lat.get_Ly(), i = 0, j = 0, dist = 0;
+	int N = lat.get_N(), Lx = lat.get_Lx(), Ly = lat.get_Ly(), i = 0, j = 0, k = 0, dist = 0;
 	double prob, rando;
 	spin newspin;
 	int x = 0, y = 0;
 	//use look-up table and long-range wolff cluster building
 	if (LONG_RANGE_CLUSTER) {
-		std::vector<double>::iterator start = cumulative_probs.begin(), site = cumulative_probs.begin(), finish = cumulative_probs.end();
-		//std::cout << "Testing long range cluster building: \n";
-		//std::cout << "lattice start: \n" << lat.to_string() << "\n";
-		//std::cout << "seed site: {" << seed.x << ", " << seed.y << "}, seed projection: " << seed.proj << "\n";
-		do {
-			rando = drand1_()*(1 - *site) + *site;
-			//std::cout << "current add site: " << std::distance(start, site) << "\n";
-			//std::cout << "scaled random number: " << rando << "\n";
-			site = std::lower_bound(start, finish, rando);
-			dist = std::distance(start, site);
-			//std::cout << "new add site: " << dist << " away from seed location\nSpin added?";
-			i = (seed.x + dist / Ly) % Lx;
-			j = (seed.y + dist % Ly) % Ly;
-			if (site != finish && cluster.getval(i, j) == 0 && interactions.getval(i, j)*seed.proj*lat.get_spin(i, j) < 0) {
-				newspin.x = i;
-				newspin.y = j;
-				newspin.proj = lat.get_spin(i, j);
-				buffer.push_back(newspin);
-				cluster.setval(i, j, 1);
-				++cluster_size;
-				//std::cout << " yes\n\n";
+		//std::vector<double>::iterator start = cumulative_probs.begin(), site = cumulative_probs.begin(), finish = cumulative_probs.end();
+		////std::cout << "Testing long range cluster building: \n";
+		////std::cout << "lattice start: \n" << lat.to_string() << "\n";
+		////std::cout << "seed site: {" << seed.x << ", " << seed.y << "}, seed projection: " << seed.proj << "\n";
+		//do {
+		//	rando = drand1_()*(1 - *site) + *site;
+		//	//std::cout << "current add site: " << std::distance(start, site) << "\n";
+		//	//std::cout << "scaled random number: " << rando << "\n";
+		//	site = std::lower_bound(start, finish, rando);
+		//	dist = std::distance(start, site);
+		//	//std::cout << "new add site: " << dist << " away from seed location\nSpin added?";
+		//	i = (seed.x + dist / Ly) % Lx;
+		//	j = (seed.y + dist % Ly) % Ly;
+		//	if (site != finish && cluster.getval(i, j) == 0 && interactions.getval(i, j)*seed.proj*lat.get_spin(i, j) < 0) {
+		//		newspin.x = i;
+		//		newspin.y = j;
+		//		newspin.proj = lat.get_spin(i, j);
+		//		buffer.push_back(newspin);
+		//		cluster.setval(i, j, 1);
+		//		++cluster_size;
+		//		//std::cout << " yes\n\n";
+		//	}
+		//	//else std::cout << " no\n\n";
+		//} while (site != finish);
+
+
+		//implement Blote's long range cluster forming
+		//here the spin-boson action is used; would need to alter for different forms of the action
+		//also, only looks in time dimension from seed spin
+		//algorithm: choose a random number, calculate distance from seed spin and add corresponding spin to the cluster until length is exhausted
+		//start with a cutoff at a distance of 2*log_10(Nt) or 10 spins, whichever is larger and consider each spin in turn
+		int cutoff = 5 > 2 * log10(Ly) ? 5 : 2 * log10(Ly);
+		if (cutoff > Ly/2) { cutoff = Ly/2; }
+		if (VERIFY_TESTING) {
+			std::cout << "Cutoff distance: " << cutoff << "\n";
+
+			//check spins within cutoff distance
+			std::cout << "Seed coordinates: (" << seed.x << ", " << seed.y << ")\n";
+		}
+		for (int i = Ly - cutoff; i < Ly + cutoff; ++i) {
+			y = (seed.y + i) % Ly;
+			if (cluster.getval(seed.x, y) == 0) {
+				if (VERIFY_TESTING) {
+					std::cout << "Checking time coordinate: " << y << "\n";
+				}
+				if (drand1_() < 1 - exp(2 * interactions.getval(0, i % Ly)*seed.proj*lat.get_spin(seed.x, y))) {
+					newspin.x = seed.x;
+					newspin.y = y;
+					newspin.proj = lat.get_spin(seed.x, y);
+					buffer.push_back(newspin);
+					cluster.setval(newspin.x, newspin.y, 1);
+					if (VERIFY_TESTING) {
+						std::cout << "Spin at tau bar = " << y << " Added\n";
+					}
+				}
 			}
-			//else std::cout << " no\n\n";
-		} while (site != finish);
+		}
+
+		//now do the long-range cluster building
+		j = cutoff;
+		while (j < Ly - cutoff) {
+			rando = atan(1 / (tan(M_PI*(.5*(Ly + 1) - j) / Ly) + Ly * log(1 - drand1_()) / params.sbparams.A0 / M_PI));
+			k = rando < 0 ? ceil(Ly / M_PI * (rando + M_PI) - .5) : ceil(Ly / M_PI * rando - .5);
+			y = (seed.y + k + Ly) % Ly;
+			if (k < Ly - cutoff && cluster.getval(seed.x, y) == 0) {
+				//std::cout << "Inside if statement: (j, k, y) = (" << j << ", " << k << ", " << y << ")\n";
+				newspin.x = seed.x;
+				newspin.y = y;
+				newspin.proj = lat.get_spin(seed.x, y);
+				buffer.push_back(newspin);
+				cluster.setval(newspin.x, newspin.y, 1);
+			}
+			j = k;
+		}
+
 	}
 	else if (NEAREST_NEIGHBOR_CLUSTER) {
 		//Only look at nearest neighbors, and only care about two possible couplings
+		std::cout << "Dm and DE are not implemented\n";
 		double Jx = params.Js[0], Jy = params.Js[1];
 		x = seed.x;
 		y = seed.y;
@@ -391,8 +465,6 @@ void LongRangeWolff2D::test_spins(spin seed){
 				//	std::cout << "seed spin: (" << seed.x << "," << seed.y << "," << seed.proj << ")\n";
 				//	std::cout << "new spin: (" << newspin_it->x << "," << newspin_it->y << "," << newspin_it->proj << ")\n";
 				//}
-				++cluster_size;
-				cluster_mag += newspin_it->proj;
 				*newspin_it = not_cluster.back();
 				if (newspin_it == not_cluster.end() - 1) {
 					not_cluster.pop_back();

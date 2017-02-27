@@ -1,15 +1,2 @@
-﻿  LongRangeWolff2D.cpp
-c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(95): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\matthew\dropbox\code\class_mc\lib\longrangewolff2d.cpp(318): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
-c:\users\matthew\dropbox\code\class_mc\lib\longrangewolff2d.cpp(383): warning C4101: 'temp_spin': unreferenced local variable
-  Generating Code...
-  Compiling...
-  mc_benchmark.cpp
-c:\users\matthew\dropbox\code\class_mc\lib\memtimetester.h(95): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\matthew\dropbox\code\class_mc\windows\classmctest\classmc\mc_benchmark.cpp(304): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-c:\users\matthew\dropbox\code\class_mc\windows\classmctest\classmc\mc_benchmark.cpp(325): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  class_mc_io.cpp
-  ClassMC.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\ClassMCTest\x64\Debug\ClassMC.exe
+﻿  ClassMC.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\ClassMCTest\x64\Debug\ClassMC.exe
   ClassMC.vcxproj -> C:\Users\Matthew\Dropbox\Code\class_mc\windows\ClassMCTest\x64\Debug\ClassMC.pdb (Partial PDB)

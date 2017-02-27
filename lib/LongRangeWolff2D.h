@@ -13,6 +13,9 @@ class LongRangeWolff2D {
 	class_mc_params params;//problem parameters
 	Matrix interactions;//interaction matrix
 	std::vector<double> cumulative_probs;//cumulative bond probabilities
+	double E;//current "energy" (action divided by beta, probably corresponds to free energy)
+	double dS;//double the running action due to cluster spin interactions
+	int mag;//current magnetization
 
 
 	std::vector<spin> buffer;//holds the indices of spins to check
@@ -21,16 +24,15 @@ class LongRangeWolff2D {
 	std::vector<std::vector<int>> cluster_alt;//alternative cluster that may or may not be faster
 	int cluster_size;//size of the cluster during a given MC step
 	int cluster_mag;//total magnetization of the cluster
+	void fill_not_cluster();
 	
 	
 	void set_model();//set the model based on the model parameter in "params"
 	void set_mean_field_model();//create interaction matrix for the mean field model
 	void set_spin_boson_model();//create interaction matrix for the spin boson model
 	void set_cumulative_probs(int, int);//set cumulative probability vector for long range cluster forming
-	void fill_not_cluster();
 
-	
-	
+
 	bool LONG_RANGE_CLUSTER;//if true, use long range cluster forming
 	bool NEAREST_NEIGHBOR_CLUSTER;//if true, use short range cluster forming
 	bool TIMERS;//if true, timers will be used throughout
@@ -54,6 +56,8 @@ public:
 
 	std::vector<double> calc_corr(int dimension);
 
+	std::vector<double> calc_corr_slow();
+
 	double calc_sx();
 
 	double calc_sz();
@@ -66,6 +70,14 @@ public:
 
 	double get_beta() {
 		return params.beta;
+	}
+
+	double get_E() {
+		return E;
+	}
+
+	double get_mag() {
+		return mag < 0 ? -((double)mag)/lat.get_N() : ((double)mag) / lat.get_N();
 	}
 
 	void print_lat() {

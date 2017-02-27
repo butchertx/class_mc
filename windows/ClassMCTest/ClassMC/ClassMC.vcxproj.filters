@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib\MemTimeTester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\lib\IsingLattice2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,5 +53,10 @@
     <ClInclude Include="..\..\..\lib\LongRangeWolff2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\x64\Debug\ex_input.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

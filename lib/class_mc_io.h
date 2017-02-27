@@ -209,7 +209,7 @@ void write_final_outputs(class_mc_measurements results, int bins);
 
 void write_params(class_mc_params params);
 
-void write_state(int, IsingLattice2D, double);
+void write_state(int, IsingLattice2D&);
 
 bool isDirExist(const std::string& path);
 

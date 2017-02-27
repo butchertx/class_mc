@@ -15,6 +15,8 @@ void process_timer_cluster_results(timer_list, std::vector<double>, std::vector<
 void process_autocorrelation_results(std::vector<std::vector<double>>, std::vector<class_mc_params>);
 std::vector<double> parallel_tempering(std::vector<LongRangeWolff2D>::iterator, std::vector<LongRangeWolff2D>::iterator);
 
+
+
 int main(int argc, char *argv[]) {
 
 	/*
@@ -38,6 +40,66 @@ int main(int argc, char *argv[]) {
 
 	std::string mystr;
 
+	///**
+	//---------------------------------------------------------------
+	//-1. Test fast calc of observables
+	//---------------------------------------------------------------
+	//**/
+	//std::cout << "Test observable calculation? Y or N\n";
+	//getline(std::cin, mystr);
+	//if (mystr.compare("Y") == 0 || mystr.compare("y") == 0) {
+	//	class_mc_params params;
+	//	std::ifstream infile;
+	//	std::cout << "Program name: " << argv[0] << "\n";
+	//	std::cout << "Input file: " << argv[1] << "\n\n";
+	//	infile.open(argv[1]);
+	//	read_input_ising(&infile, &params);
+	//	read_input_spin_boson(&infile, &(params.sbparams));
+	//	std::cout << "Base parameters: \n" << params.to_string();
+	//	IsingLattice2D lat = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+	//	LongRangeWolff2D wolff = LongRangeWolff2D(&lat, &params);
+	//	MemTimeTester timer;
+	//	apply_spin_boson_params(&params);
+	//	//wolff.set_testing();
+	//	wolff.set_alg_long_range_cluster();
+	//	timer.flag_start_time("steps");
+	//	for (int i = 0; i < params.eq_time; ++i) {
+	//		wolff.step();
+	//	}
+	//	timer.flag_end_time("steps");
+	//	//write the state
+	//	timer.flag_start_time("write state");
+	//	write_state(0, wolff.get_lat());
+	//	timer.flag_end_time("write state");
+
+	//	//calculate observables 2 different ways and compare
+	//	class_mc_measurements results;
+	//	results.names = { "mag_slow", "mag_insta", "mag_fast", "energy_slow", "energy_fast" };
+	//	results.values = { {}, {}, {}, {}, {} };
+	//	results.func_names = { "corr_slow", "corr_fast" };
+	//	results.functions = { {}, {} };
+	//	results.function_num_measures = { 0, 0 };
+
+	//	timer.flag_start_time("slow measurements");
+	//	results.record("mag_slow", wolff.calc_mag());
+	//	results.record("mag_insta", wolff.get_mag());
+	//	results.record("energy_slow", wolff.calc_E());
+	//	results.record("corr_slow", wolff.calc_corr_slow());
+	//	timer.flag_end_time("slow measurements");
+
+	//	timer.flag_start_time("fast measurements");
+	//	std::ifstream statefile;
+	//	statefile.open("./dump/state0.csv");
+	//	results.record("mag_fast", 0.0);
+	//	results.record("energy_fast", 0.0);
+	//	results.record("corr_fast", { 0.0, 0.0 });
+	//	calc_corr_fast(&statefile);
+	//	timer.flag_end_time("fast measurements");
+
+	//	timer.print_timers();
+	//	write_final_outputs(results, 1);
+	//}
+
 	/**
 	---------------------------------------------------------------
 	0. Set up small simulation and use it to check individual steps
@@ -47,29 +109,47 @@ int main(int argc, char *argv[]) {
 	std::cout << "Test algorithm? Y or N\n";
 	getline(std::cin, mystr);
 	if (mystr.compare("Y") == 0 || mystr.compare("y") == 0) {
-		int lattice_length = 15;
 		class_mc_params params;
-		params.set_q_ising_dummy(lattice_length, 1.0, 0.5);
-		IsingLattice2D lat = IsingLattice2D(lattice_length, lattice_length, params.rand_seed);
+		std::ifstream infile;
+		std::cout << "Program name: " << argv[0] << "\n";
+		std::cout << "Input file: " << argv[1] << "\n\n";
+		infile.open(argv[1]);
+		read_input_ising(&infile, &params);
+		read_input_spin_boson(&infile, &(params.sbparams));
+		std::cout << "Base parameters: \n" << params.to_string();		
+		IsingLattice2D lat = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
 		LongRangeWolff2D wolff = LongRangeWolff2D(&lat, &params);
 		MemTimeTester timer;
 		apply_spin_boson_params(&params);
-		wolff.set_testing();
+		//wolff.set_testing();
 		std::cout << params.to_string() << "\n";
+/*
 		wolff.print_interactions();
+		wolff.set_alg_naive_cluster();
 		timer.flag_start_time("naive cluster");
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < params.steps_per_measure; ++i) {
 			wolff.step();
+			timer.flag_start_time("naive measurements");
+			wolff.calc_mag();
+			wolff.calc_corr(1);
+			wolff.calc_sz();
+			wolff.calc_sx();
+			timer.flag_end_time("naive measurements");
 		}
 		timer.flag_end_time("naive cluster");
-		//timer.print_timers();
-
-		//wolff.set_alg_long_range_cluster();
-		//timer.flag_start_time("long range cluster");
-		//for (int i = 0; i < 1000; ++i) {
-		//	wolff.step();
-		//}
-		//timer.flag_end_time("long range cluster");
+*/
+		wolff.set_alg_long_range_cluster();
+		timer.flag_start_time("long range cluster");
+		for (int i = 0; i < params.steps_per_measure; ++i) {
+			wolff.step();
+			timer.flag_start_time("long range cluster measurements");
+			wolff.calc_mag();
+			wolff.calc_corr(1);
+			wolff.calc_sz();
+			wolff.calc_sx();
+			timer.flag_end_time("long range cluster measurements");
+		}
+		timer.flag_end_time("long range cluster");
 		timer.print_timers();
 	}
 	/**
@@ -81,33 +161,41 @@ int main(int argc, char *argv[]) {
 	std::cout << "Test step time? Y or N\n";
 	getline(std::cin, mystr);
 	if (mystr.compare("Y") == 0 || mystr.compare("y") == 0) {
-		const int NUM_TESTS = 8;
-		int lattice_length = 10;//do on small lattice because cluster size will predict step time
-		//parameters: test a range (isotropic in the quantum ising base model) from paramagnetic to ferromagnetic, including different a/bv and A0
-		//track average cluster size because this will give the best indication of potential step time
-		std::vector<double> Js_Gs = { 0.3, 0.6 }, A0s = { 0.001, 0.2 }, a_bv = { 0.01, 0.5 };
+		//get base parameters
+		class_mc_params base_params;
+		std::ifstream infile;
+		std::cout << "Program name: " << argv[0] << "\n";
+		std::cout << "Input file: " << argv[1] << "\n\n";
+		infile.open(argv[1]);
+		read_input_ising(&infile, &base_params);
+		read_input_spin_boson(&infile, &(base_params.sbparams));
+		std::cout << "Base parameters: \n" << base_params.to_string();
+
+		//set up list of different params
+		const int NUM_TESTS = 7;
+		std::vector<double> alphas = {1.1, 1.15, 1.2, 1.25, 1.3, 1.35, 1.4};
 		MemTimeTester timer;
 		std::vector<class_mc_params> params_list;
-		std::cout << "Benchmarking Spin Boson for param list: \n" << "Lattice Sizes: " << lattice_length << "\n"
-			<< "NN coupling: " << vec2str(Js_Gs) << "\n" << "A0: " << vec2str(A0s) << "\n" << "a/beta/v: " << vec2str(a_bv) << "\n";
+		std::cout << "Benchmarking Spin Boson for param list: \n" << "Alpha = " << vec2str(alphas) << "\n";
 		//loop through parameters and make a lattice, class_mc_params, and wolff for each
 		std::vector<IsingLattice2D> lattices;
 		std::vector<LongRangeWolff2D> wolffs;
-		for (double J : Js_Gs) {
-			for (double A0 : A0s) {
-				for (double a : a_bv) {
-					class_mc_params params;
-					params.set_q_ising_dummy(lattice_length, J, A0);
-					//std::cout << params.to_string() << std::endl;
-					params_list.push_back(params);
-					IsingLattice2D lat = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
-					LongRangeWolff2D wolff = LongRangeWolff2D(&lat, &params);
-					wolff.set_timers();
-					wolff.set_alg_long_range_cluster();
-					lattices.push_back(lat);
-					wolffs.push_back(wolff);
-				}
-			}
+		std::vector<class_mc_measurements> results_list;
+		for (double alpha : alphas) {
+			class_mc_params params = base_params;
+			params.sbparams.A0 = alpha;
+			apply_spin_boson_params(&params);
+			params_list.push_back(params);
+			IsingLattice2D lat = IsingLattice2D(params.lengths[0], params.lengths[1], params.rand_seed);
+			LongRangeWolff2D wolff = LongRangeWolff2D(&lat, &params);
+			class_mc_measurements results;
+			results.names = { "mag", "mag2", "mag4" };
+			results.values = { {}, {}, {} };
+			wolff.set_timers();
+			wolff.set_alg_long_range_cluster();
+			lattices.push_back(lat);
+			wolffs.push_back(wolff);
+			results_list.push_back(results);
 		}
 
 		/**
@@ -119,20 +207,41 @@ int main(int argc, char *argv[]) {
 		//(for example, some might start fast and get longer as they equilibrate or vice versa
 		std::cout << "Running Equilibration Timers...\n\n";
 		std::vector<double> cluster_sizes;
-		//	#pragma omp parallel for
+		//std::vector<int> seeds = { 1, 2, 3, 4, 5, 6, 7, 8 };
+//#pragma omp parallel for shared(seeds, wolffs, params_list, results_list, timer) num_threads(4)
 		for (int i = 0; i < wolffs.size(); ++i) {
+			double mag;
+			//rand_init_(&seeds[i]);
 			double cluster_size = 0;
 			std::string timer_name = "wolff_equil_timer" + std::to_string(i);
-			//std::cout << "Running wolff equilibration timer #" << i << std::endl;
+			std::cout << "Running wolff equilibration timer #" << i << std::endl;
+			std::cout << "Parameters for A0 = " << params_list[i].sbparams.A0 << ": \n" << params_list[i].to_string() << "\n\n";
 			timer.flag_start_time(timer_name);
 			for (int j = 0; j < params_list[i].eq_time; ++j) {
-				wolffs[i].step();
+				for (int k = 0; k < params_list[i].measures_per_dump; ++k) {
+					wolffs[i].step();
+				}
 				cluster_size += wolffs[i].get_cluster_size();
+				mag = wolffs[i].calc_mag();
+				results_list[i].record("mag", mag);
+				results_list[i].record("mag2", mag*mag);
+				results_list[i].record("mag4", mag*mag*mag*mag);
 			}
 			timer.flag_end_time(timer_name);
 			cluster_sizes.push_back(cluster_size / params_list[i].eq_time / wolffs[i].get_lat().get_N());
 		}
 		process_timer_cluster_results(timer.get_timers(), cluster_sizes, params_list);
+		//output alphas, then binder cumulants
+		std::ofstream file;
+		file.open("results.csv");
+		for (double alpha : alphas) {
+			file << alpha << ",";
+		}
+		file << "\n";
+		for (class_mc_measurements results : results_list) {
+			file << 1 -  mean(results.get_vals("mag4")) / mean(results.get_vals("mag2"))/mean(results.get_vals("mag2")) / 3 << ",";
+		}
+		file.close();
 
 
 		/**
@@ -140,20 +249,20 @@ int main(int argc, char *argv[]) {
 		2.  Autocorrelation functions - find how long each wolff takes to change to a "random" state
 		--------------------------------------------------------------------------------------------
 		**/
-		std::cout << "Running Autocorrelation Tests for Sz...\n\n";
-		std::vector<std::vector<double>> autocorr;
-		//		#pragma omp parallel for num_threads(4)
-		for (int i = 0; i < wolffs.size(); ++i) {
-			//std::cout << "Running wolff autocorrelation calc #" << i << std::endl;
-			autocorr.push_back({});
-			for (int j = 0; j < params_list[i].eq_time; ++j) {
-				for (int k = 0; k < 1; ++k) {
-					wolffs[i].step();
-				}
-				autocorr[i].push_back((wolffs[i].calc_sz() > 0 ? wolffs[i].calc_sz() : -wolffs[i].calc_sz()));
-			}
-		}
-		process_autocorrelation_results(autocorr, params_list);
+		//std::cout << "Running Autocorrelation Tests for Sz...\n\n";
+		//std::vector<std::vector<double>> autocorr;
+		////		#pragma omp parallel for num_threads(4)
+		//for (int i = 0; i < wolffs.size(); ++i) {
+		//	//std::cout << "Running wolff autocorrelation calc #" << i << std::endl;
+		//	autocorr.push_back({});
+		//	for (int j = 0; j < params_list[i].eq_time; ++j) {
+		//		for (int k = 0; k < 1; ++k) {
+		//			wolffs[i].step();
+		//		}
+		//		autocorr[i].push_back((wolffs[i].calc_sz() > 0 ? wolffs[i].calc_sz() : -wolffs[i].calc_sz()));
+		//	}
+		//}
+		//process_autocorrelation_results(autocorr, params_list);
 	}
 
 

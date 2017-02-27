@@ -9,4 +9,4 @@ alpha = 0:0.1:1.0;
 
 
 %make 1 plot with 6 different lines on it
-errorbar(alpha, mags, mag_err)
+errorbar(alpha, -mags, mag_err)

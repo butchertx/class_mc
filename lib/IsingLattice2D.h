@@ -25,6 +25,7 @@ public:
 		}
 	}
 
+	//returns the value that the spin changes to
 	void flip_spin(int x, int y) {
 		spins[x][y] *= -1;
 	}
@@ -53,7 +54,7 @@ public:
 		std::stringstream outstring1;
 		for (std::vector<std::vector<int>>::iterator itx = spins.begin(); itx != spins.end(); ++itx) {
 			for (std::vector<int>::iterator ity = (*itx).begin(); ity != (*itx).end(); ++ity) {
-				outstring1 << .5*(*ity + 1) << " ";
+				outstring1 << *ity << " ";
 			}
 			outstring1 << "\n";
 		}
@@ -65,7 +66,7 @@ public:
 		std::stringstream outstring1;
 		for (std::vector<std::vector<int>>::iterator itx = spins.begin(); itx != spins.end(); ++itx) {
 			for (std::vector<int>::iterator ity = (*itx).begin(); ity != (*itx).end(); ++ity) {
-				outstring1 << .5*(*ity + 1) << " ";
+				outstring1 << *ity << " ";
 			}
 			outstring1 << "\n";
 		}
