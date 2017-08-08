@@ -6,16 +6,19 @@
 #include <string>
 #include <cmath>
 #include "IsingLattice2D.h"
+extern "C" {
+#include "random.h"
+}
 
 //classical monte carlo params for a number of different models and algorithms
 //Models: n-vector models (ising, heisenberg), spinboson
 //Lattices: chain, square, triangular, kagome
 //Algorithms: wolff, generalizedwolff
 
-const double PI = 3.1415897535;
+const double PI = 3.141592653589793238462643;
 
 struct spin_boson_params {
-	double g, A0, delta, v;
+	double g, A0, delta, v, omega_c;
 };
 
 struct class_mc_params {
@@ -24,7 +27,7 @@ struct class_mc_params {
 	std::vector<int> lengths;
 	std::vector<double> spacings;
 	std::vector<double> Js;
-	std::string model, lattice, alg;
+	std::string cutoff_type, lattice, alg;
 	spin_boson_params sbparams;
 	std::string to_string() {
 		std::stringstream ss;
@@ -40,7 +43,7 @@ struct class_mc_params {
 			ss << value << " ";
 		}
 		ss << "\n";
-		ss << "Model: " << model << "\n";
+		ss << "Cutoff: " << cutoff_type << "\n";
 		ss << "J couplings: ";
 		for (auto const& value : Js) {
 			ss << value << " ";
@@ -55,20 +58,17 @@ struct class_mc_params {
 		ss << "Steps Per Measurement: " << steps_per_measure << "\n";
 		ss << "Measures Per Dump: " << measures_per_dump << "\n";
 		ss << "Max Dumps: " << max_dumps << "\n";
-
-		if (model.compare("spin_boson") == 0) {
-			ss << "Spin Boson Params:\n";
-			ss << "g: " << sbparams.g << "\n";
-			ss << "A0: " << sbparams.A0 << "\n";
-			ss << "Delta: " << sbparams.delta << "\n";
-			ss << "V: " << sbparams.v << "\n";
-			ss << "Spatial Antiferro Coupling: " << 2.0 * sbparams.A0 * PI * PI / lengths[1] / lengths[1] / sinh(PI * spacings[0] / beta / sbparams.v) / sinh(PI * spacings[0] / beta / sbparams.v) << "\n";
-		}
+		ss << "Spin Boson Params:\n";
+		ss << "g: " << sbparams.g << "\n";
+		ss << "A0: " << sbparams.A0 << "\n";
+		ss << "Delta: " << sbparams.delta << "\n";
+		ss << "V: " << sbparams.v << "\n";
+		ss << "omega_c: " << sbparams.omega_c << "\n";
 
 		return ss.str();
 	}
 
-	void set_q_ising_dummy(int length_in, double beta_in, double delta_in) {
+/* 	void set_q_ising_dummy(int length_in, double beta_in, double delta_in) {
 		dim = 2;
 		rand_seed = length_in;
 		eq_time = 1;
@@ -88,7 +88,7 @@ struct class_mc_params {
 		sbparams.delta = delta_in;
 		sbparams.g = 1.0;
 		sbparams.v = 1.0;
-	}
+	} */
 };
 
 
@@ -199,6 +199,8 @@ void read_input_ising(std::ifstream*, class_mc_params*);
 
 void read_input_spin_boson(std::ifstream*, spin_boson_params*);
 
+void read_input_mpi(std::ifstream*, std::string*, double*);
+
 void apply_spin_boson_params(class_mc_params*);
 
 void write_outputs(int, std::vector<int>, std::vector<double>, std::vector<double>, std::vector<double>);
@@ -211,6 +213,8 @@ void write_params(class_mc_params params);
 
 void write_state(int, IsingLattice2D&);
 
+void write_state_pbm(int, IsingLattice2D&);
+
 bool isDirExist(const std::string& path);
 
 bool makePath(const std::string& path);
@@ -218,3 +222,5 @@ bool makePath(const std::string& path);
 double mean(std::vector<double> vals);
 
 double error(std::vector<double> vals, double mean, int bins);
+
+double bootstrap(std::vector<double>, int, std::string);

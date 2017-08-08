@@ -1,0 +1,9 @@
+name, average, error
+mag,2e-07,2e-07
+mag2,2e-10,2e-10
+mag4,2e-16,2e-16
+cluster size,2000,0.000305505
+a_mag,1,2e-07
+a_mag2,1,3.998e-07
+sx,2e-07,2e-07
+loc,1,2e-07

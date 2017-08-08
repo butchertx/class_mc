@@ -1,0 +1,5 @@
+name, average, error
+mag,0.999999,1e-06
+mag2,0.999998,1.998e-06
+mag4,0.999996,3.98802e-06
+cluster size,1000,0.0005

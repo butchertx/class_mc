@@ -1,0 +1,32 @@
+#Lattice Parameters
+2				#dimension
+square			#lattice type
+2 32			#lengths
+1.0 1.0			#spacings
+
+#Model Parameters
+exp     		#cutoff type (hard, exp, or inf)
+0.0 1.0			#J_couples
+1				#beta
+0.0				#h
+
+#Algorithm Parameters
+wolff_lr		#algorithm
+123456789		#random seed
+
+#Simulation Parameters
+50		#equilibration time
+2			#steps per measure
+20  		#measures per dump
+100     		#max dumps
+
+#Spin Boson Parameters
+1.0				#g
+0.05			#alpha
+10				#Delta
+1				#v
+32			#omega_c
+
+#MPI/Parallel tempering params
+alpha           #parameter to vary
+0.1	           #variation in chosen param

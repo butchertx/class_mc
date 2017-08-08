@@ -383,8 +383,6 @@ C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cerrno
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\share.h
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\vector
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xmemory
-C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\sstream
-C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\string
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/host_vector.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/detail/config.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/detail/config/config.h
@@ -525,6 +523,7 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/de
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/detail/error_code.inl
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/detail/error_condition.inl
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/system_error.h
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\string
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/detail/system_error.inl
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cuda/error.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cuda/detail/guarded_driver_types.h
@@ -776,6 +775,7 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/de
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cpp/detail/equal.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cuda/detail/equal.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/detail/host_vector.inl
+C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\sstream
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/device_vector.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/device_malloc_allocator.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/device_ptr.h
@@ -838,3 +838,5 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/de
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/detail/sequential/gather.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cpp/detail/gather.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\thrust/system/cuda/detail/gather.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\cuda_runtime.h
+C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\include\device_launch_parameters.h

@@ -81,7 +81,6 @@ public:
 
 	void print_timers() {
 		std::stringstream outstring;
-		std::chrono::duration<double> elapsed;
 		for (int i = 0; i < names.size(); ++i) {
 			outstring << names[i] << ": " << times[i] << "s\n";
 		}

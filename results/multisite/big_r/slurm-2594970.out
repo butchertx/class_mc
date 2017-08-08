@@ -1,0 +1,334 @@
+Process 4 GPU, yay or nay: 1
+Process 9 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 11 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 3 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 5 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 8 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 7 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 6 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 1 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 2 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Process 0 GPU, yay or nay: 1
+GPU properties:
+Name: Tesla M2050
+Threads per block: 1024
+Thread dimensions: {1024,1024,64}
+Max grid size: {65535,65535,65535}
+
+Process 10 GPU, yay or nay: 1
+Using Finite Exponential Cutoff
+Using Finite Exponential Cutoff
+GPU memory usage: used = 57.515625 MB, free = 2629.921875 MB, total = 2687.437500 MB
+Params for process 0:
+Dimension: 2
+Lattice type: square
+Dimension lengths: 16 1024 
+Dimension spacings: 1 0.000976562 
+Cutoff: exp
+J couplings: 0 2.31444 
+kT: 1
+Beta: 1
+H: 0
+Algorithm: wolff_lr
+Random Seed: 123456789
+Equilibration time: 2000
+Steps Per Measurement: 16
+Measures Per Dump: 50
+Max Dumps: 100
+Spin Boson Params:
+g: 1
+A0: 0.05
+Delta: 10
+V: 1
+omega_c: 1024
+
+
+
+Using Finite Exponential Cutoff
+parallel tempering step 0 out of 100 completed
+parallel tempering step 1 out of 100 completed
+parallel tempering step 2 out of 100 completed
+parallel tempering step 3 out of 100 completed
+parallel tempering step 4 out of 100 completed
+parallel tempering step 5 out of 100 completed
+parallel tempering step 6 out of 100 completed
+parallel tempering step 7 out of 100 completed
+parallel tempering step 8 out of 100 completed
+parallel tempering step 9 out of 100 completed
+parallel tempering step 10 out of 100 completed
+parallel tempering step 11 out of 100 completed
+parallel tempering step 12 out of 100 completed
+parallel tempering step 13 out of 100 completed
+parallel tempering step 14 out of 100 completed
+parallel tempering step 15 out of 100 completed
+parallel tempering step 16 out of 100 completed
+parallel tempering step 17 out of 100 completed
+parallel tempering step 18 out of 100 completed
+parallel tempering step 19 out of 100 completed
+parallel tempering step 20 out of 100 completed
+parallel tempering step 21 out of 100 completed
+parallel tempering step 22 out of 100 completed
+parallel tempering step 23 out of 100 completed
+parallel tempering step 24 out of 100 completed
+parallel tempering step 25 out of 100 completed
+parallel tempering step 26 out of 100 completed
+parallel tempering step 27 out of 100 completed
+parallel tempering step 28 out of 100 completed
+parallel tempering step 29 out of 100 completed
+parallel tempering step 30 out of 100 completed
+parallel tempering step 31 out of 100 completed
+parallel tempering step 32 out of 100 completed
+parallel tempering step 33 out of 100 completed
+parallel tempering step 34 out of 100 completed
+parallel tempering step 35 out of 100 completed
+parallel tempering step 36 out of 100 completed
+parallel tempering step 37 out of 100 completed
+parallel tempering step 38 out of 100 completed
+parallel tempering step 39 out of 100 completed
+parallel tempering step 40 out of 100 completed
+parallel tempering step 41 out of 100 completed
+parallel tempering step 42 out of 100 completed
+parallel tempering step 43 out of 100 completed
+parallel tempering step 44 out of 100 completed
+parallel tempering step 45 out of 100 completed
+parallel tempering step 46 out of 100 completed
+parallel tempering step 47 out of 100 completed
+parallel tempering step 48 out of 100 completed
+parallel tempering step 49 out of 100 completed
+parallel tempering step 50 out of 100 completed
+parallel tempering step 51 out of 100 completed
+parallel tempering step 52 out of 100 completed
+parallel tempering step 53 out of 100 completed
+parallel tempering step 54 out of 100 completed
+parallel tempering step 55 out of 100 completed
+parallel tempering step 56 out of 100 completed
+parallel tempering step 57 out of 100 completed
+parallel tempering step 58 out of 100 completed
+parallel tempering step 59 out of 100 completed
+parallel tempering step 60 out of 100 completed
+parallel tempering step 61 out of 100 completed
+parallel tempering step 62 out of 100 completed
+parallel tempering step 63 out of 100 completed
+parallel tempering step 64 out of 100 completed
+parallel tempering step 65 out of 100 completed
+parallel tempering step 66 out of 100 completed
+parallel tempering step 67 out of 100 completed
+parallel tempering step 68 out of 100 completed
+parallel tempering step 69 out of 100 completed
+parallel tempering step 70 out of 100 completed
+parallel tempering step 71 out of 100 completed
+parallel tempering step 72 out of 100 completed
+parallel tempering step 73 out of 100 completed
+parallel tempering step 74 out of 100 completed
+parallel tempering step 75 out of 100 completed
+parallel tempering step 76 out of 100 completed
+parallel tempering step 77 out of 100 completed
+parallel tempering step 78 out of 100 completed
+parallel tempering step 79 out of 100 completed
+parallel tempering step 80 out of 100 completed
+parallel tempering step 81 out of 100 completed
+parallel tempering step 82 out of 100 completed
+parallel tempering step 83 out of 100 completed
+parallel tempering step 84 out of 100 completed
+parallel tempering step 85 out of 100 completed
+parallel tempering step 86 out of 100 completed
+parallel tempering step 87 out of 100 completed
+parallel tempering step 88 out of 100 completed
+parallel tempering step 89 out of 100 completed
+parallel tempering step 90 out of 100 completed
+parallel tempering step 91 out of 100 completed
+parallel tempering step 92 out of 100 completed
+parallel tempering step 93 out of 100 completed
+parallel tempering step 94 out of 100 completed
+parallel tempering step 95 out of 100 completed
+parallel tempering step 96 out of 100 completed
+parallel tempering step 97 out of 100 completed
+parallel tempering step 98 out of 100 completed
+Warning: fast action and cufft calculation do not match!
+fast_action: -42674.8; current cufft action: Warning: fast action and cufft calculation do not match!
+fast_action: -44259.8; current cufft action: -44259.8
+Warning: fast action and cufft calculation do not match!
+fast_action: -41581.3; current cufft action: -41581.3
+Warning: fast action and cufft calculation do not match!
+fast_action: -43203.1; current cufft action: -43203.1
+Warning: fast action and cufft calculation do not match!
+fast_action: -42135.5; current cufft action: -42135.5
+Results for process #3:
+full simulation: 12001.8s
+equilibration: 297.596s
+action/step calculation: 11958.2s
+parallel tempering: 42.782s
+measurements: 5.51655s
+Setup: 1.78944s
+Cluster Building: 202.913s
+thrust variable creation: 108.508s
+acceptance testing: 11635.9s
+total steps = 82000, acceptance ratio = 0.999061, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.17
+
+
+Warning: fast action and cufft calculation do not match!
+fast_action: -43731.4; current cufft action: -43731.4
+-42674.8
+Results for process #2:
+full simulation: 12001.8s
+equilibration: 297.593s
+action/step calculation: 11927.1s
+parallel tempering: 73.8608s
+measurements: 5.51745s
+Setup: 1.7922s
+Cluster Building: 133.165s
+thrust variable creation: 111.38s
+acceptance testing: 11671.6s
+total steps = 82000, acceptance ratio = 0.998927, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.08
+
+
+Results for process #9:
+full simulation: 12002s
+equilibration: 297.599s
+action/step calculation: 11969.1s
+parallel tempering: 31.9785s
+measurements: 5.49691s
+Setup: 1.79094s
+Cluster Building: 326.478s
+thrust variable creation: 106.843s
+acceptance testing: 11526.4s
+total steps = 82000, acceptance ratio = 0.99789, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.98
+
+
+Results for process #7:
+full simulation: 12002s
+equilibration: 297.597s
+action/step calculation: 11979.3s
+parallel tempering: 21.7491s
+measurements: 5.51245s
+Setup: 1.79129s
+Cluster Building: 315.408s
+thrust variable creation: 107.366s
+acceptance testing: 11546.4s
+total steps = 82000, acceptance ratio = 0.998146, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.94
+
+
+Results for process #10:
+full simulation: 12002s
+equilibration: 297.601s
+action/step calculation: 11978.1s
+parallel tempering: 22.9745s
+measurements: 5.49247s
+Setup: 1.7889s
+Cluster Building: 330.795s
+thrust variable creation: 106.97s
+acceptance testing: 11530.6s
+total steps = 82000, acceptance ratio = 0.997695, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.97
+
+
+Results for process #8:
+full simulation: 12002s
+equilibration: 297.6s
+action/step calculation: 11978.6s
+parallel tempering: 22.451s
+measurements: 5.49336s
+Setup: 1.78819s
+Cluster Building: 321.472s
+thrust variable creation: 108.223s
+acceptance testing: 11538.1s
+total steps = 82000, acceptance ratio = 0.998305, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.97
+
+
+Results for process #11:
+full simulation: 12002s
+equilibration: 297.599s
+action/step calculation: 11980.1s
+parallel tempering: 20.9207s
+measurements: 5.49948s
+Setup: 1.79105s
+Cluster Building: 335.352s
+thrust variable creation: 107.115s
+acceptance testing: 11528.1s
+total steps = 82000, acceptance ratio = 0.997305, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.79
+
+
+Results for process #6:
+full simulation: 12002s
+equilibration: 297.599s
+action/step calculation: 11976.8s
+parallel tempering: 24.28s
+measurements: 5.49712s
+Setup: 1.78841s
+Cluster Building: 306.885s
+thrust variable creation: 108.632s
+acceptance testing: 11551.8s
+total steps = 82000, acceptance ratio = 0.998573, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.76
+
+
+Warning: fast action and cufft calculation do not match!
+fast_action: -40481.6; current cufft action: -40481.6
+Warning: fast action and cufft calculation do not match!
+fast_action: -41038.2; current cufft action: -41038.2
+Results for process #4:
+full simulation: 12002.1s
+equilibration: 297.594s
+action/step calculation: 11973.6s
+parallel tempering: 27.6679s
+measurements: 5.50593s
+Setup: 1.7919s
+Cluster Building: 258.425s
+thrust variable creation: 108.225s
+acceptance testing: 11597.2s
+total steps = 82000, acceptance ratio = 0.998878, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.32
+
+
+Results for process #5:
+full simulation: 12002.1s
+equilibration: 297.596s
+action/step calculation: 11963.4s
+parallel tempering: 37.8086s
+measurements: 5.51383s
+Setup: 1.78955s
+Cluster Building: 290.642s
+thrust variable creation: 107.019s
+acceptance testing: 11555.5s
+total steps = 82000, acceptance ratio = 0.998707, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.55
+
+
+parallel tempering step 99 out of 100 completed
+Warning: fast action and cufft calculation do not match!
+fast_action: -37969.6; current cufft action: -37969.6
+After simulation:
+GPU memory usage: used = 734.089844 MB, free = 1953.347656 MB, total = 2687.437500 MB
+Warning: fast action and cufft calculation do not match!
+fast_action: -38459; current cufft action: -38459
+Results for process #1:
+full simulation: 12002.3s
+equilibration: 297.593s
+action/step calculation: 11860.9s
+parallel tempering: 140.551s
+measurements: 5.51979s
+Setup: 1.79243s
+Cluster Building: 77.6021s
+thrust variable creation: 109.161s
+acceptance testing: 11663.2s
+total steps = 82000, acceptance ratio = 0.999378, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.09
+
+
+Results for process #0:
+full simulation: 12002.2s
+equilibration: 297.551s
+action/step calculation: 11866.9s
+parallel tempering: 134.723s
+measurements: 5.5089s
+Setup: 1.78863s
+Cluster Building: 45.6403s
+thrust variable creation: 108.277s
+acceptance testing: 11703.4s
+total steps = 82000, acceptance ratio = 0.999768, number of measurements = 5000, parallel tempering steps (or dump steps for no gpu) = 100, parallel tempering move probability: 0.04
+
+

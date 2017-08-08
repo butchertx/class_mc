@@ -58,5 +58,8 @@
     <Text Include="..\x64\Debug\ex_input.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\x64\Debug\options.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

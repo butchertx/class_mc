@@ -126,8 +126,8 @@ void read_input_ising(std::ifstream* file_p, class_mc_params* params) {
 		iss.str("");//#Model Parameters
 
 		std::getline(*file_p, line);
-		iss << line;//#model
-		iss >> params->model;
+		iss << line;//#cutoff type
+		iss >> params->cutoff_type;
 		iss.str("");
 
 		std::getline(*file_p, line);
@@ -235,11 +235,51 @@ void read_input_spin_boson(std::ifstream* file_p, spin_boson_params* params) {
 		iss << line;//#v
 		iss >> params->v;
 		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#omega_c
+		iss >> params->omega_c;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#blank
+		iss.str("");
 	}
 	else {
 		std::cout << "Error: input file not opened\n";
 	}
 }
+
+void read_input_mpi(std::ifstream* file_p, std::string* param_name, double* delta) {
+	std::string line;
+	int dummyi;
+	double dummyd;
+	std::stringstream iss;
+
+	if (file_p->is_open()) {
+		std::getline(*file_p, line);
+		iss << line;//#MPI params
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#param name
+		iss >> *param_name;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#delta
+		iss >> *delta;
+		iss.str("");
+
+		std::getline(*file_p, line);
+		iss << line;//#blank
+		iss.str("");
+	}
+	else {
+		std::cout << "Error: input file not opened\n";
+	}
+}
+
 
 void apply_spin_boson_params(class_mc_params* params) {
 	double tc = params->beta / ((double)params->lengths[1]);
@@ -338,6 +378,17 @@ void write_state(int state_num, IsingLattice2D& lat) {
 
 }
 
+void write_state_pbm(int state_num, IsingLattice2D& lat){
+	makePath("./dump");
+	char dump_name[100];
+	sprintf(dump_name, "dump/state%04d.pbm", state_num);
+	std::ofstream file;
+	file.open(dump_name);
+	file << "P1 " << lat.get_Lx() << " " << lat.get_Ly() << "\n";
+	file << lat.to_bitmap();
+	file.close();
+}
+
 //find the mean of a given list of values
 double mean(std::vector<double> vals) {
 	double sum = 0.0;
@@ -371,4 +422,63 @@ double error(std::vector<double> vals, double mean, int bins) {
 		std_dev = sqrt(std_dev / NMC / (NMC - 1));
 		return std_dev;
 	}
+}
+
+double jackknife_binder(std::vector<double> mag2, std::vector<double> mag4, int bins) {
+	double binder_avg = 0;
+	for (int i = 0; i < mag2.size(); ++i) {
+		binder_avg += mag4[i] / mag2[i] / mag2[i];
+	}
+	binder_avg /= mag2.size();
+	std::vector<double> b_jacks(bins, 0.0);
+	for (int b = 0; b < bins; ++b) {
+		for (int i = 0; i < mag2.size() / bins; ++i) {
+
+		}
+	}
+	return 0;
+}
+
+double bootstrap(std::vector<double> x, int n_boot, std::string func) {
+	//compute the error in <x^2> - <x>^2 using the bootstrap method
+	//use n_boot as the number of bootstrap bins and a random seed
+	std::vector<double> boots(n_boot);
+	rand_init_(&n_boot);
+	double xB, xB_sq, x_temp;
+	int N = x.size();
+	for (int boot = 0; boot < n_boot; ++boot) {
+		//find a bootstrap value for x^B_boot and x^2 ^B_boot
+		xB = 0;
+		xB_sq = 0;
+		for (int i = 0; i < N; ++i) {
+			x_temp = x[(int)(drand1_()*N)];
+			xB += x_temp;
+			xB_sq += x_temp*x_temp;
+		}
+		xB /= N;
+		xB_sq /= N;
+		//find the values for f^B_boot
+		if (func.compare("binder") == 0) {
+			//for this case, input x should be m^2 measurements
+			boots[boot] = xB_sq / (xB*xB);
+		}
+		else if (func.compare("susceptibility") == 0) {
+			boots[boot] = xB_sq - xB*xB;
+		}
+		else {
+			std::cout << "Error: invalid bootstrap function option \"" << func << "\". Returning 0 for error estimate.\n";
+			return 0;
+		}
+	}
+	//average the values for f^B_boot to get susceptibility
+	double av = mean(boots);
+	//std::cout << "Bootstrap mean: " << av << "\n";
+
+	//std dev for f^B is std dev for f
+	double boots_sq = 0;
+	for (int i = 0; i < n_boot; ++i) {
+		boots_sq += boots[i] * boots[i];
+	}
+	boots_sq /= n_boot;
+	return sqrt(boots_sq - av*av);
 }
